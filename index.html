@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="ru" data-lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Expected value and median (Larsen &amp; Marx, Section 3.5): formulas, solutions to problems 3.5.1–3.5.36, cheat sheet, common mistakes. RU / EN / KZ.">
+<meta name="color-scheme" content="light dark">
+<title>Матожидание и медиана</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js" defer></script>
+</head>
+<body>
+<style>
+/* Layout: одна колонка-учебник; формулы F1..F14, задачи ссылаются на формулы; плавающий переключатель языка RU/EN/KZ */
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --ink:#15212C; --muted:#5A6774; --line:#D5DCE3;
+  --accent:#0A6F6A; --accent-soft:#D7EFEC; --mark:#B4530F; --mark-soft:#FBE8D9;
+  --good:#1E7B3A; --good-soft:#DDF1E3; --bad:#B42318; --bad-soft:#FBE3E0;
+  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F161C; --surface:#17212A; --ink:#E6EDF2; --muted:#9AA8B4; --line:#2A3743;
+  --accent:#4FC7BE; --accent-soft:#143A38; --mark:#F0965A; --mark-soft:#3A2516;
+  --good:#5BC27A; --good-soft:#163222; --bad:#F2776B; --bad-soft:#3A1B18; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F161C; --surface:#17212A; --ink:#E6EDF2; --muted:#9AA8B4; --line:#2A3743;
+  --accent:#4FC7BE; --accent-soft:#143A38; --mark:#F0965A; --mark-soft:#3A2516;
+  --good:#5BC27A; --good-soft:#163222; --bad:#F2776B; --bad-soft:#3A1B18; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+html:not([data-lang="en"]):not([data-lang="kk"]) [data-l]:not([data-l~="ru"]),
+html[data-lang="en"] [data-l]:not([data-l~="en"]),
+html[data-lang="kk"] [data-l]:not([data-l~="kk"]){display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 90px}
+.wrap{max-width:740px;margin:0 auto;display:flex;flex-direction:column;gap:30px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.25;margin:0}
+h1{font-size:1.55rem;font-weight:700}
+h2{font-size:1.15rem;font-weight:700}
+h3{font-size:.95rem;font-weight:500}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+section{display:flex;flex-direction:column;gap:12px;scroll-margin-top:12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.soft{background:var(--accent-soft);border:none}
+ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
+mjx-container{color:var(--ink)}
+mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%;margin:.4em 0!important;padding:2px 0}
+.note{font-size:.86rem;color:var(--muted)}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px}
+nav.toc a,.flink{font-size:.8rem;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface);white-space:nowrap}
+.flink{font-family:var(--f-mono);padding:1px 8px;font-size:.75rem}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+.tgrid a{font-family:var(--f-mono);font-size:.8rem;text-align:center;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 0}
+.tgrid a:hover{border-color:var(--accent)}
+.fl{display:flex;flex-direction:column;gap:10px}
+.fcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;scroll-margin-top:12px;min-width:0}
+.fcard:target,.task:target{outline:2px solid var(--mark);outline-offset:2px}
+.fhead{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.fid{font-family:var(--f-mono);font-size:.78rem;background:var(--ink);color:var(--bg);border-radius:6px;padding:1px 7px}
+.fname{font-weight:600}
+.fwhen{font-size:.85rem;color:var(--muted)}
+.task{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;scroll-margin-top:12px;min-width:0}
+.thead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.tid{font-family:var(--f-mono);font-weight:600;color:var(--accent)}
+.uses{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:.78rem;color:var(--muted)}
+.cond{font-size:.95rem}
+details{border-top:1px dashed var(--line);padding-top:8px}
+details summary{cursor:pointer;font-weight:600;color:var(--accent);font-size:.9rem}
+details[open] summary{margin-bottom:6px}
+.sol{display:flex;flex-direction:column;gap:8px;font-size:.94rem}
+.ans{background:var(--good-soft);border-radius:8px;padding:8px 10px;font-weight:500}
+.why{border-left:3px solid var(--accent);padding-left:10px}
+.trap{background:var(--bad-soft);border-radius:8px;padding:8px 10px;font-size:.9rem}
+.trap b{color:var(--bad)}
+.back{font-size:.78rem;align-self:flex-end;text-decoration:none}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-weight:600;color:var(--muted);font-size:.78rem}
+td:first-child,th:first-child{text-align:left}
+tfoot td{font-weight:600;border-bottom:none}
+.cheat td,.cheat th{white-space:normal;text-align:left;vertical-align:top}
+.cheat td:first-child{font-weight:600;min-width:7em}
+.errs{counter-reset:e;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.errs li{display:grid;grid-template-columns:2em 1fr;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.errs li::before{counter-increment:e;content:counter(e);font-family:var(--f-mono);color:var(--bad);font-weight:600}
+.errs .fix{color:var(--good);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;cursor:pointer}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:.86rem}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+svg.v{display:block;width:100%;height:auto}
+.readout{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.9rem}
+.readout b{font-family:var(--f-mono);font-weight:600}
+.k-mean{color:var(--accent)} .k-med{color:var(--mark)}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:.86rem;align-items:center}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl output{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+.ste{counter-reset:s;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ste li{display:grid;grid-template-columns:2.2em 1fr;gap:6px}
+.ste li::before{counter-increment:s;content:counter(s,decimal-leading-zero);font-family:var(--f-mono);font-size:.78rem;color:var(--accent);padding-top:3px}
+.langsw{position:fixed;right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;background:var(--ink);border-radius:999px;padding:4px;gap:2px;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.langsw button{border:none;background:transparent;color:var(--bg);font-family:var(--f-mono);font-size:.82rem;font-weight:600;padding:7px 12px;border-radius:999px;opacity:.7}
+.langsw button[aria-pressed="true"]{background:var(--bg);color:var(--ink);opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+
+<div class="langsw" role="group" aria-label="Language / Язык / Тіл">
+  <button data-set="ru" aria-pressed="true">RU</button><button data-set="en" aria-pressed="false">EN</button><button data-set="kk" aria-pressed="false">KZ</button>
+</div>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px" id="top">
+  <span class="eyebrow">Larsen &amp; Marx · <span data-l="ru">раздел 3.5 · стр. 139–155</span><span data-l="en">Section 3.5 · pp. 139–155</span><span data-l="kk">3.5-бөлім · 139–155 б.</span></span>
+  <h1><span data-l="ru">Матожидание и медиана</span><span data-l="en">Expected Value and Median</span><span data-l="kk">Математикалық үміт және медиана</span></h1>
+  <p style="color:var(--muted)"><span data-l="ru">Всё от и до: формулы с номерами, все задачи 3.5.1–3.5.36 с решением, шпора и ошибки. Значок формулы <span class="flink">F1</span> в задаче — это ссылка: нажми и перейдёшь к формуле. Язык меняется кнопкой внизу справа.</span><span data-l="en">Everything from start to finish: numbered formulas, worked solutions to all problems 3.5.1–3.5.36, a cheat sheet and common mistakes. A formula tag like <span class="flink">F1</span> inside a problem is a link: tap it to jump to the formula. Switch the language with the button at the bottom right.</span><span data-l="kk">Бәрі басынан аяғына дейін: нөмірленген формулалар, 3.5.1–3.5.36 есептерінің толық шешімі, шпаргалка және жиі қателер. Есептегі <span class="flink">F1</span> сияқты формула белгісі — сілтеме: басып, формулаға өт. Тілді төменгі оң жақтағы батырмамен ауыстыр.</span></p>
+  <nav class="toc">
+    <a href="#tldr">TL;DR</a><a href="#formulas"><span data-l="ru">Формулы F1–F14</span><span data-l="en">Formulas F1–F14</span><span data-l="kk">F1–F14 формулалары</span></a><a href="#simple"><span data-l="ru">Простыми словами</span><span data-l="en">In plain words</span><span data-l="kk">Қарапайым тілмен</span></a>
+    <a href="#examples"><span data-l="ru">Примеры книги</span><span data-l="en">Book examples</span><span data-l="kk">Кітап мысалдары</span></a><a href="#tasks"><span data-l="ru">Задачи</span><span data-l="en">Problems</span><span data-l="kk">Есептер</span></a><a href="#cheat"><span data-l="ru">Шпора</span><span data-l="en">Cheat sheet</span><span data-l="kk">Шпаргалка</span></a><a href="#errors"><span data-l="ru">Ошибки</span><span data-l="en">Mistakes</span><span data-l="kk">Қателер</span></a><a href="#models"><span data-l="ru">Модели</span><span data-l="en">Models</span><span data-l="kk">Модельдер</span></a>
+  </nav>
+</header>
+
+<section id="tldr">
+  <div class="panel soft">
+    <span class="eyebrow">TL;DR</span>
+    <ul class="clean">
+      <li><span data-l="ru"><b>E(X)</b> — среднее значение, где каждое значение взвешено своей вероятностью. Сумма для дискретной величины, интеграл для непрерывной.</span><span data-l="en"><b>E(X)</b> is the average value of X, where each value is weighted by its probability. A sum for a discrete variable, an integral for a continuous one.</span><span data-l="kk"><b>E(X)</b> — X-тің орташа мәні, мұнда әр мән өз ықтималдығымен салмақталады. Дискретті шама үшін қосынды, үздіксіз шама үшін интеграл.</span></li>
+      <li><span data-l="ru">E(X) — точка опоры: распределение висит на ней в равновесии.</span><span data-l="en">E(X) is the balance point: the distribution balances on it like a seesaw.</span><span data-l="kk">E(X) — тірек нүктесі: үлестірім осы нүктеде тепе-теңдікте тұрады.</span></li>
+      <li><span data-l="ru">Готовые ответы: бином <b>np</b>, урна без возврата <b>n·r/(r+w)</b>, экспонента <b>1/λ</b>, равномерное <b>(a+b)/2</b>.</span><span data-l="en">Ready-made results: binomial <b>np</b>, hypergeometric (urn, no replacement) <b>n·r/(r+w)</b>, exponential <b>1/λ</b>, uniform <b>(a+b)/2</b>.</span><span data-l="kk">Дайын нәтижелер: биномдық үлестірім <b>np</b>, гипергеометриялық (қайтарусыз таңдау) <b>n·r/(r+w)</b>, көрсеткіштік <b>1/λ</b>, бірқалыпты <b>(a+b)/2</b>.</span></li>
+      <li><span data-l="ru">Для E[g(X)] не нужно искать распределение g(X): подставь g внутрь суммы или интеграла.</span><span data-l="en">For E[g(X)] you do not need the distribution of g(X): put g inside the sum or the integral.</span><span data-l="kk">E[g(X)] табу үшін g(X)-тің үлестірімі қажет емес: g-ны қосындының немесе интегралдың ішіне қой.</span></li>
+      <li><span data-l="ru">Если ряд или интеграл расходится, E(X) нет (Санкт-Петербург, \(1/y^2\)).</span><span data-l="en">If the series or integral diverges, E(X) does not exist (St. Petersburg paradox, \(1/y^2\)).</span><span data-l="kk">Қатар немесе интеграл жинақталмаса, E(X) болмайды (Санкт-Петербург парадоксы, \(1/y^2\)).</span></li>
+      <li><span data-l="ru"><b>Медиана</b> — точка, где накоплено 50% вероятности. Её не сдвигают выбросы.</span><span data-l="en">The <b>median</b> is the point with 50% of the probability on each side. Outliers do not move it.</span><span data-l="kk"><b>Медиана</b> — екі жағында да ықтималдықтың 50%-ы жатқан нүкте. Шеткі мәндер оны жылжытпайды.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="formulas">
+  <span class="eyebrow"><span data-l="ru">Справочник</span><span data-l="en">Reference</span><span data-l="kk">Анықтамалық</span></span>
+  <h2><span data-l="ru">Формулы раздела</span><span data-l="en">Formulas of the section</span><span data-l="kk">Бөлімнің формулалары</span></h2>
+  <div class="fl">
+    <div class="fcard" id="F1"><div class="fhead"><span class="fid">F1</span><span class="fname"><span data-l="ru">E дискретной величины (Опр. 3.5.1)</span><span data-l="en">Expected value of a discrete random variable (Def. 3.5.1)</span><span data-l="kk">Дискретті кездейсоқ шаманың математикалық үміті (3.5.1-анықтама)</span></span></div>
+      \[E(X)=\mu=\sum_{k} k\cdot p_X(k)\]
+      <p class="fwhen"><span data-l="ru">Когда: X принимает отдельные значения, есть таблица «значение — вероятность».</span><span data-l="en">When: X takes separate values and there is a “value — probability” table.</span><span data-l="kk">Қашан: X жеке мәндер қабылдайды, «мән — ықтималдық» кестесі берілген.</span></p></div>
+
+    <div class="fcard" id="F2"><div class="fhead"><span class="fid">F2</span><span class="fname"><span data-l="ru">E непрерывной величины</span><span data-l="en">Expected value of a continuous random variable</span><span data-l="kk">Үздіксіз кездейсоқ шаманың математикалық үміті</span></span></div>
+      \[E(Y)=\int_{-\infty}^{\infty} y\cdot f_Y(y)\,dy\]
+      <p class="fwhen"><span data-l="ru">Когда: дана плотность f(y). Интегрируй только там, где f ≠ 0.</span><span data-l="en">When: a pdf f(y) is given. Integrate only where f ≠ 0.</span><span data-l="kk">Қашан: ықтималдық тығыздығы f(y) берілген. Тек f ≠ 0 болатын аралықта интегралда.</span></p></div>
+
+    <div class="fcard" id="F3"><div class="fhead"><span class="fid">F3</span><span class="fname"><span data-l="ru">Условие существования (абсолютная сходимость)</span><span data-l="en">Existence condition (absolute convergence)</span><span data-l="kk">Бар болу шарты (абсолютті жинақтылық)</span></span></div>
+      \[\sum |k|\,p_X(k)<\infty,\qquad \int |y|\,f_Y(y)\,dy<\infty\]
+      <p class="fwhen"><span data-l="ru">Если сумма бесконечна, конечного E(X) нет. Пример: \(1+1+1+\dots\) или \(\int_1^\infty \frac{dy}{y}\).</span><span data-l="en">If the sum is infinite, there is no finite E(X). Example: \(1+1+1+\dots\) or \(\int_1^\infty \frac{dy}{y}\).</span><span data-l="kk">Қосынды шексіз болса, ақырлы E(X) жоқ. Мысал: \(1+1+1+\dots\) немесе \(\int_1^\infty \frac{dy}{y}\).</span></p></div>
+
+    <div class="fcard" id="F4"><div class="fhead"><span class="fid">F4</span><span class="fname"><span data-l="ru">Биномиальное распределение (Теорема 3.5.1)</span><span data-l="en">Binomial distribution (Theorem 3.5.1)</span><span data-l="kk">Биномдық үлестірім (3.5.1-теорема)</span></span></div>
+      \[X\sim\text{Bin}(n,p)\ \Rightarrow\ E(X)=np\]
+      <p class="fwhen"><span data-l="ru">Признак: n независимых одинаковых испытаний, считаем число успехов. Выбор с возвращением или из огромной совокупности.</span><span data-l="en">Signal: n independent identical trials, count the successes. Sampling with replacement or from a very large population.</span><span data-l="kk">Белгісі: n тәуелсіз бірдей сынақ, сәттілер санын санаймыз. Қайтарумен таңдау немесе өте үлкен жиыннан таңдау.</span></p></div>
+
+    <div class="fcard" id="F5"><div class="fhead"><span class="fid">F5</span><span class="fname"><span data-l="ru">Гипергеометрическое распределение (Теорема 3.5.2)</span><span data-l="en">Hypergeometric distribution (Theorem 3.5.2)</span><span data-l="kk">Гипергеометриялық үлестірім (3.5.2-теорема)</span></span></div>
+      \[E(X)=\frac{rn}{r+w}=n\cdot\frac{r}{r+w}\]
+      <p class="fwhen"><span data-l="ru">Признак: урна с r «красными» и w «белыми», берём n штук <b>без возвращения</b>, считаем красные. Среднее такое же, как у бинома с \(p=\tfrac{r}{r+w}\).</span><span data-l="en">Signal: an urn with r red and w white balls, draw n <b>without replacement</b>, count the red ones. The mean equals the binomial mean with \(p=\tfrac{r}{r+w}\).</span><span data-l="kk">Белгісі: урнада r қызыл және w ақ шар, n шарды <b>қайтарусыз</b> аламыз, қызылдарын санаймыз. Орта мәні \(p=\tfrac{r}{r+w}\) болатын биномдық үлестірімдікімен бірдей.</span></p></div>
+
+    <div class="fcard" id="F6"><div class="fhead"><span class="fid">F6</span><span class="fname"><span data-l="ru">E функции от X (Теорема 3.5.3)</span><span data-l="en">Expected value of a function of X (Theorem 3.5.3)</span><span data-l="kk">X функциясының математикалық үміті (3.5.3-теорема)</span></span></div>
+      \[E[g(X)]=\sum_k g(k)\,p_X(k),\qquad E[g(Y)]=\int g(y)\,f_Y(y)\,dy\]
+      <p class="fwhen"><span data-l="ru">Когда: спрашивают среднее не самой X, а площади, энергии, прибыли, \(X^2\), \(1/X\) и т.п. Распределение g(X) искать не нужно.</span><span data-l="en">When: the question asks for the mean of an area, energy, profit, \(X^2\), \(1/X\), etc., not of X itself. You do not need the pdf of g(X).</span><span data-l="kk">Қашан: X-тің өзінің емес, ауданның, энергияның, пайданың, \(X^2\), \(1/X\) т.с.с. орташасы сұралса. g(X)-тің үлестірімін табу қажет емес.</span></p></div>
+
+    <div class="fcard" id="F7"><div class="fhead"><span class="fid">F7</span><span class="fname"><span data-l="ru">Линейность (Следствие 3.5.1)</span><span data-l="en">Linearity (Corollary 3.5.1)</span><span data-l="kk">Сызықтылық (3.5.1-салдар)</span></span></div>
+      \[E(aX+b)=aE(X)+b,\qquad E(X_1+\dots+X_n)=E(X_1)+\dots+E(X_n)\]
+      <p class="fwhen"><span data-l="ru">Вторая часть строго доказывается в разделе 3.9, но её удобно знать уже сейчас. Независимость не нужна.</span><span data-l="en">The second part is proved in Section 3.9, but it is useful already now. Independence is not required.</span><span data-l="kk">Екінші бөлігі 3.9-бөлімде дәлелденеді, бірақ оны қазір білген пайдалы. Тәуелсіздік талап етілмейді.</span></p></div>
+
+    <div class="fcard" id="F8"><div class="fhead"><span class="fid">F8</span><span class="fname"><span data-l="ru">Медиана (Опр. 3.5.2)</span><span data-l="en">Median (Def. 3.5.2)</span><span data-l="kk">Медиана (3.5.2-анықтама)</span></span></div>
+      \[\int_{-\infty}^{m} f_Y(y)\,dy=\tfrac12\quad\Longleftrightarrow\quad F_Y(m)=\tfrac12\]
+      <p class="fwhen"><span data-l="ru">Дискретная: \(P(X\lt m)=P(X\gt m)\); если \(P(X\le m)=0{,}5\) и \(P(X\ge m')=0{,}5\), то медиана \((m+m')/2\).</span><span data-l="en">Discrete case: \(P(X\lt m)=P(X\gt m)\); if \(P(X\le m)=0.5\) and \(P(X\ge m')=0.5\), the median is \((m+m')/2\).</span><span data-l="kk">Дискретті жағдай: \(P(X\lt m)=P(X\gt m)\); егер \(P(X\le m)=0{,}5\) және \(P(X\ge m')=0{,}5\) болса, медиана \((m+m')/2\).</span></p></div>
+
+    <div class="fcard" id="F9"><div class="fhead"><span class="fid">F9</span><span class="fname"><span data-l="ru">Показательное (экспоненциальное) распределение</span><span data-l="en">Exponential distribution</span><span data-l="kk">Көрсеткіштік (экспоненциалдық) үлестірім</span></span></div>
+      \[f(y)=\lambda e^{-\lambda y}=\tfrac1\mu e^{-y/\mu}:\quad E(Y)=\tfrac1\lambda=\mu,\quad m=\mu\ln 2\]
+      <p class="fwhen"><span data-l="ru">Медиана ≈ 0,693·μ, меньше среднего: длинный правый хвост.</span><span data-l="en">Median ≈ 0.693·μ, smaller than the mean: long right tail.</span><span data-l="kk">Медиана ≈ 0,693·μ, орташадан кіші: оң жақ «құйрығы» ұзын.</span></p></div>
+
+    <div class="fcard" id="F10"><div class="fhead"><span class="fid">F10</span><span class="fname"><span data-l="ru">Равномерное распределение на [a, b]</span><span data-l="en">Uniform distribution on [a, b]</span><span data-l="kk">[a, b] аралығындағы бірқалыпты үлестірім</span></span></div>
+      \[f(y)=\tfrac{1}{b-a}:\quad E(Y)=\tfrac{a+b}{2},\qquad E(Y^2)=\tfrac{a^2+ab+b^2}{3}\]</div>
+
+    <div class="fcard" id="F11"><div class="fhead"><span class="fid">F11</span><span class="fname"><span data-l="ru">Ряды, которые нужны в задачах</span><span data-l="en">Series used in the problems</span><span data-l="kk">Есептерде қажет қатарлар</span></span></div>
+      \[\sum_{k=1}^{\infty}x^k=\frac{x}{1-x},\qquad \sum_{k=1}^{\infty}k\,x^{k}=\frac{x}{(1-x)^2},\qquad \sum_{k=1}^{\infty}\tfrac1k=\infty\]
+      <p class="fwhen"><span data-l="ru">При \(|x|\lt 1\). Частный случай: \(\sum k/2^k=2\). Последний ряд — гармонический, он расходится.</span><span data-l="en">For \(|x|\lt 1\). Special case: \(\sum k/2^k=2\). The last one is the harmonic series; it diverges.</span><span data-l="kk">\(|x|\lt 1\) болғанда. Дербес жағдай: \(\sum k/2^k=2\). Соңғысы — гармоникалық қатар, ол жинақталмайды.</span></p></div>
+
+    <div class="fcard" id="F12"><div class="fhead"><span class="fid">F12</span><span class="fname"><span data-l="ru">Гамма-интеграл и интеграл Гаусса</span><span data-l="en">Gamma integral and Gaussian integral</span><span data-l="kk">Гамма-интеграл және Гаусс интегралы</span></span></div>
+      \[\int_0^\infty y^n e^{-ay}\,dy=\frac{n!}{a^{n+1}},\qquad \int_0^\infty v^2e^{-v^2}dv=\tfrac{\sqrt\pi}{4}\]
+      <p class="fwhen"><span data-l="ru">Заменяет интегрирование по частям. Распределение Рэлея: \(E(Y)=a\sqrt{\pi/2}\).</span><span data-l="en">Replaces integration by parts. Rayleigh distribution: \(E(Y)=a\sqrt{\pi/2}\).</span><span data-l="kk">Бөліктеп интегралдаудың орнына қолданылады. Рэлей үлестірімі: \(E(Y)=a\sqrt{\pi/2}\).</span></p></div>
+
+    <div class="fcard" id="F13"><div class="fhead"><span class="fid">F13</span><span class="fname"><span data-l="ru">Формула через «хвосты» (задача 3.5.26)</span><span data-l="en">Tail-sum formula (Problem 3.5.26)</span><span data-l="kk">«Құйрықтар» арқылы формула (3.5.26-есеп)</span></span></div>
+      \[X\in\{0,1,2,\dots\}:\quad E(X)=\sum_{k=1}^{\infty}P(X\ge k)\]</div>
+
+    <div class="fcard" id="F14"><div class="fhead"><span class="fid">F14</span><span class="fname"><span data-l="ru">Ставка справедливой игры</span><span data-l="en">Ante of a fair game</span><span data-l="kk">Әділ ойынның бәсі</span></span></div>
+      <span data-l="ru">\[\text{игра справедлива}\iff E(\text{выигрыш})-\text{ставка}=0\]</span><span data-l="en">\[\text{fair game}\iff E(\text{winnings})-\text{ante}=0\]</span><span data-l="kk">\[\text{ойын әділ}\iff E(\text{ұтыс})-\text{бәс}=0\]</span>
+      <p class="fwhen"><span data-l="ru">Если выигрыш уже «чистый» (ставка вычтена), игра справедлива, когда \(E(X)=0\).</span><span data-l="en">If the winnings are already net (ante subtracted), the game is fair when \(E(X)=0\).</span><span data-l="kk">Егер ұтыс таза болса (бәс шегерілген), ойын \(E(X)=0\) болғанда әділ.</span></p></div>
+  </div>
+</section>
+
+<section id="simple">
+  <span class="eyebrow">ASD-STE100 + <span data-l="ru">Фейнман</span><span data-l="en">Feynman</span><span data-l="kk">Фейнман</span></span>
+  <h2><span data-l="ru">Простыми словами</span><span data-l="en">In plain words</span><span data-l="kk">Қарапайым тілмен</span></h2>
+  <div class="panel">
+    <h3><span data-l="ru">Алгоритм для любой задачи на матожидание</span><span data-l="en">Algorithm for any expected-value problem</span><span data-l="kk">Математикалық үмітке арналған кез келген есептің алгоритмі</span></h3>
+    <ol class="ste">
+      <li><span><span data-l="ru">Назови случайную величину. Запиши, что она считает.</span><span data-l="en">Name the random variable. Write what it counts or measures.</span><span data-l="kk">Кездейсоқ шаманы ата. Оның нені санайтынын немесе өлшейтінін жаз.</span></span></li>
+      <li><span><span data-l="ru">Найди все её значения.</span><span data-l="en">List all its possible values.</span><span data-l="kk">Оның барлық мүмкін мәндерін тап.</span></span></li>
+      <li><span><span data-l="ru">Найди вероятность каждого значения. Проверь: сумма = 1.</span><span data-l="en">Find the probability of each value. Check that they add up to 1.</span><span data-l="kk">Әр мәннің ықтималдығын тап. Тексер: қосындысы 1-ге тең.</span></span></li>
+      <li><span><span data-l="ru">Узнай тип: бином, урна, экспонента, равномерное. Если тип известен, возьми готовую формулу.</span><span data-l="en">Identify the type: binomial, urn, exponential, uniform. If the type is known, use the ready formula.</span><span data-l="kk">Түрін анықта: биномдық, урна, көрсеткіштік, бірқалыпты. Түрі белгілі болса, дайын формуланы қолдан.</span></span></li>
+      <li><span><span data-l="ru">Если спрашивают функцию от X, используй <a href="#F6">F6</a>.</span><span data-l="en">If the question asks about a function of X, use <a href="#F6">F6</a>.</span><span data-l="kk">Егер X-тің функциясы сұралса, <a href="#F6">F6</a> қолдан.</span></span></li>
+      <li><span><span data-l="ru">Умножь, сложи (или проинтегрируй). Проверь сходимость.</span><span data-l="en">Multiply, add (or integrate). Check convergence.</span><span data-l="kk">Көбейт, қос (немесе интегралда). Жинақтылықты тексер.</span></span></li>
+      <li><span><span data-l="ru">Проверь ответ: E лежит между наименьшим и наибольшим значением.</span><span data-l="en">Check the answer: E lies between the smallest and the largest value of X.</span><span data-l="kk">Жауапты тексер: E ең кіші және ең үлкен мәндердің арасында жатады.</span></span></li>
+    </ol>
+  </div>
+  <div class="panel">
+    <h3><span data-l="ru">Объяснение для пятиклассника</span><span data-l="en">Explained for a ten-year-old</span><span data-l="kk">Бесінші сынып оқушысына түсіндіру</span></h3>
+    <p><span data-l="ru">Ты играешь в рулетку на «нечёт». В 9 играх из 19 получаешь $1, в 10 из 19 теряешь $1. Сыграй 19 000 раз: выиграешь примерно 9 000, проиграешь 10 000. Итог −1000 за 19 000 игр, то есть −5¢ за игру. Это и есть E(X). Оно не обязано быть возможным исходом: −5¢ не выпадает никогда.</span><span data-l="en">You bet on “odd” in roulette. In 9 games out of 19 you win $1, in 10 out of 19 you lose $1. Play 19,000 times: you win about 9,000 and lose about 10,000. The result is −1,000 for 19,000 games, or −5¢ per game. This is E(X). It does not have to be a possible outcome: you never actually get −5¢.</span><span data-l="kk">Сен рулеткада «тақ» санға бәс тігесің. 19 ойынның 9-ында $1 ұтасың, 10-ында $1 ұтыласың. 19 000 рет ойна: шамамен 9 000 ұтып, 10 000 ұтыласың. Нәтиже 19 000 ойынға −1000, яғни бір ойынға −5¢. Бұл — E(X). Ол мүмкін нәтиже болуы міндетті емес: −5¢ ешқашан түспейді.</span></p>
+    <p><span data-l="ru">Аналогия: линейка с грузиками. Грузик стоит в точке k и весит p(k). Палец, на котором линейка в равновесии, стоит в E(X). Далёкий грузик тянет сильнее, у него длинное плечо. Медиане плечо не важно, ей важно только, с какой стороны грузик. Поэтому выброс тянет E, а медиану нет.</span><span data-l="en">Analogy: a ruler with small weights. A weight sits at point k and weighs p(k). The finger that balances the ruler is at E(X). A far weight pulls harder because it has a long lever arm. The median ignores the lever arm; it only cares on which side a weight lies. So an outlier pulls E, but not the median.</span><span data-l="kk">Ұқсастық: үстінде кішкене жүктері бар сызғыш. Жүк k нүктесінде тұр, салмағы p(k). Сызғышты тепе-теңдікте ұстайтын саусақ E(X) нүктесінде. Алыстағы жүк күштірек тартады, өйткені оның иіні ұзын. Медианаға иін маңызды емес, тек жүктің қай жақта екені маңызды. Сондықтан шеткі мән E-ні тартады, ал медиананы — жоқ.</span></p>
+  </div>
+</section>
+
+<section id="examples">
+  <span class="eyebrow"><span data-l="ru">Разобранные примеры книги</span><span data-l="en">Worked examples from the book</span><span data-l="kk">Кітаптағы талданған мысалдар</span></span>
+  <h2><span data-l="ru">Примеры 3.5.1–3.5.14 в одну строку</span><span data-l="en">Examples 3.5.1–3.5.14 in one line each</span><span data-l="kk">3.5.1–3.5.14 мысалдары бір жолда</span></h2>
+  <div class="panel"><div class="tbl-wrap"><table class="cheat">
+    <thead><tr><th><span data-l="ru">Пример</span><span data-l="en">Example</span><span data-l="kk">Мысал</span></th><th><span data-l="ru">Суть</span><span data-l="en">Idea</span><span data-l="kk">Мәні</span></th><th><span data-l="ru">Ответ</span><span data-l="en">Answer</span><span data-l="kk">Жауабы</span></th></tr></thead>
+    <tbody>
+      <tr><td><span data-l="ru">Рулетка</span><span data-l="en">Roulette</span><span data-l="kk">Рулетка</span></td><td><span data-l="ru">±$1 с вероятностями 9/19 и 10/19</span><span data-l="en">±$1 with probabilities 9/19 and 10/19</span><span data-l="kk">±$1, ықтималдықтары 9/19 және 10/19</span>, <a href="#F1">F1</a></td><td><span data-l="ru">−5,3¢</span><span data-l="en">−5.3¢</span><span data-l="kk">−5,3¢</span></td></tr>
+      <tr><td>3.5.1</td><td><span data-l="ru">Бином n=3, p=5/9</span><span data-l="en">Binomial n=3, p=5/9</span><span data-l="kk">Биномдық, n=3, p=5/9</span>, <a href="#F1">F1</a>→<a href="#F4">F4</a></td><td>5/3</td></tr>
+      <tr><td>3.5.2</td><td><span data-l="ru">Урна 5 красных + 4 белых, берём 3</span><span data-l="en">Urn with 5 red + 4 white, draw 3</span><span data-l="kk">Урна: 5 қызыл + 4 ақ, 3 шар аламыз</span>, <a href="#F5">F5</a></td><td>5/3</td></tr>
+      <tr><td>3.5.3</td><td><span data-l="ru">Лотерея D.J., выплата 700 к 1, ставка $5</span><span data-l="en">D.J. numbers game, payoff 700 to 1, $5 bet</span><span data-l="kk">D.J. лотереясы, төлем 700:1, бәс $5</span></td><td><span data-l="ru">−$1,50</span><span data-l="en">−$1.50</span><span data-l="kk">−$1,50</span></td></tr>
+      <tr><td>3.5.4</td><td><span data-l="ru">Объединение проб крови 50 человек:</span><span data-l="en">Pooling blood samples of 50 people:</span><span data-l="kk">50 адамның қан үлгілерін біріктіру:</span> \(E=1\cdot(1-p)^{50}+51[1-(1-p)^{50}]\)</td><td><span data-l="ru">p=0,001 → 3,4 теста</span><span data-l="en">p=0.001 → 3.4 tests</span><span data-l="kk">p=0,001 → 3,4 тест</span></td></tr>
+      <tr><td>3.5.5</td><td><span data-l="ru">Санкт-Петербург:</span><span data-l="en">St. Petersburg:</span><span data-l="kk">Санкт-Петербург:</span> \(\sum 2^k\cdot2^{-k}=\infty\), <a href="#F3">F3</a></td><td><span data-l="ru">нет E</span><span data-l="en">no E</span><span data-l="kk">E жоқ</span></td></tr>
+      <tr><td>3.5.6</td><td><span data-l="ru">Экспонента, длина свободного пробега</span><span data-l="en">Exponential, mean free path</span><span data-l="kk">Көрсеткіштік, еркін жүру жолының ұзындығы</span>, <a href="#F9">F9</a></td><td>μ</td></tr>
+      <tr><td>3.5.7</td><td><span data-l="ru">Рэлей</span><span data-l="en">Rayleigh</span><span data-l="kk">Рэлей</span> \(\frac{y}{a^2}e^{-y^2/2a^2}\), <a href="#F12">F12</a></td><td>\(a\sqrt{\pi/2}\)</td></tr>
+      <tr><td>3.5.8</td><td><span data-l="ru">Лампочка: среднее 1000 ч</span><span data-l="en">Light bulb: mean life 1000 h</span><span data-l="kk">Шам: орташа мерзімі 1000 сағ</span>, <a href="#F8">F8</a></td><td><span data-l="ru">медиана 693 ч</span><span data-l="en">median 693 h</span><span data-l="kk">медиана 693 сағ</span></td></tr>
+      <tr><td>3.5.9</td><td><span data-l="ru">X∈{−2,1,2}, W=X², двумя способами</span><span data-l="en">X∈{−2,1,2}, W=X², two ways</span><span data-l="kk">X∈{−2,1,2}, W=X², екі тәсілмен</span>, <a href="#F6">F6</a></td><td>29/8</td></tr>
+      <tr><td>3.5.10</td><td><span data-l="ru">Краска:</span><span data-l="en">Spray paint:</span><span data-l="kk">Бояу:</span> \(g=20\pi Y^2\), \(f=3y^2\)</td><td><span data-l="ru">12π ≈ 37,7 ft²</span><span data-l="en">12π ≈ 37.7 ft²</span><span data-l="kk">12π ≈ 37,7 ft²</span></td></tr>
+      <tr><td>3.5.11</td><td><span data-l="ru">Монету бросают до первого орла, выплата</span><span data-l="en">Coin tossed until the first head, payoff</span><span data-l="kk">Тиын алғашқы елтаңбаға дейін лақтырылады, төлем</span> \((1/2)^k\), <a href="#F11">F11</a></td><td><span data-l="ru">$0,33</span><span data-l="en">$0.33</span><span data-l="kk">$0,33</span></td></tr>
+      <tr><td>3.5.12</td><td><span data-l="ru">Максвелл:</span><span data-l="en">Maxwell:</span><span data-l="kk">Максвелл:</span> \(E(\tfrac12 mS^2)\)</td><td>3m/(4a)</td></tr>
+      <tr><td>3.5.13</td><td><span data-l="ru">Сколько выпускать при спросе ~ Exp</span><span data-l="en">How many to produce when demand ~ Exp</span><span data-l="kk">Сұраныс ~ Exp болғанда қанша өндіру керек</span></td><td>\(x=-\lambda\ln\frac{n}{m+n}\)</td></tr>
+      <tr><td>3.5.14</td><td><span data-l="ru">Точка на [0,1], E(короткий/длинный)</span><span data-l="en">Random point on [0,1], E(shorter/longer)</span><span data-l="kk">[0,1]-дегі кездейсоқ нүкте, E(қысқа/ұзын)</span></td><td><span data-l="ru">2 ln2 − 1 ≈ 0,39</span><span data-l="en">2 ln2 − 1 ≈ 0.39</span><span data-l="kk">2 ln2 − 1 ≈ 0,39</span></td></tr>
+    </tbody></table></div></div>
+</section>
+
+<section id="tasks">
+  <span class="eyebrow"><span data-l="ru">Практика · все вопросы раздела</span><span data-l="en">Practice · all questions of the section</span><span data-l="kk">Практика · бөлімнің барлық сұрақтары</span></span>
+  <h2><span data-l="ru">Задачи 3.5.1–3.5.36</span><span data-l="en">Problems 3.5.1–3.5.36</span><span data-l="kk">3.5.1–3.5.36 есептері</span></h2>
+  <p class="note"><span data-l="ru">Сначала прочитай условие и попробуй сам. Потом открой «Решение». Условия пересказаны кратко, числа как в книге.</span><span data-l="en">Read the problem and try it yourself first. Then open “Solution”. Problems are briefly paraphrased; the numbers match the book.</span><span data-l="kk">Алдымен шартын оқып, өзің шешіп көр. Содан кейін «Шешімі» бөлімін аш. Шарттар қысқаша мазмұндалған, сандар кітаптағыдай.</span></p>
+  <div class="tgrid">
+    <a href="#t1">3.5.1</a><a href="#t2">3.5.2</a><a href="#t3">3.5.3</a><a href="#t4">3.5.4</a><a href="#t5">3.5.5</a><a href="#t6">3.5.6</a>
+    <a href="#t7">3.5.7</a><a href="#t8">3.5.8</a><a href="#t9">3.5.9</a><a href="#t10">3.5.10</a><a href="#t11">3.5.11</a><a href="#t12">3.5.12</a>
+    <a href="#t13">3.5.13</a><a href="#t14">3.5.14</a><a href="#t15">3.5.15</a><a href="#t16">3.5.16</a><a href="#t17">3.5.17</a><a href="#t18">3.5.18</a>
+    <a href="#t19">3.5.19</a><a href="#t20">3.5.20</a><a href="#t21">3.5.21</a><a href="#t22">3.5.22</a><a href="#t23">3.5.23</a><a href="#t24">3.5.24</a>
+    <a href="#t25">3.5.25</a><a href="#t26">3.5.26</a><a href="#t27">3.5.27</a><a href="#t28">3.5.28</a><a href="#t29">3.5.29</a><a href="#t30">3.5.30</a>
+    <a href="#t31">3.5.31</a><a href="#t32">3.5.32</a><a href="#t33">3.5.33</a><a href="#t34">3.5.34</a><a href="#t35">3.5.35</a><a href="#t36">3.5.36</a>
+  </div>
+
+<article class="task" id="t1">
+  <div class="thead"><span class="tid">3.5.1</span><h3><span data-l="ru">Кено</span><span data-l="en">Keno</span><span data-l="kk">Кено</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a></span></div>
+  <p class="cond"><span data-l="ru">Ставка $1 на 10 чисел. Выплаты: меньше 5 угаданных: −$1 (0,935); 5: $2 (0,0514); 6: $18 (0,0115); 7: $180 (0,0016); 8: $1300 (1,35·10⁻⁴); 9: $2600 (6,12·10⁻⁶); 10: $10 000 (1,12·10⁻⁷). Найди E(X).</span><span data-l="en">A $1 bet on ten numbers. Payoffs: fewer than 5 correct: −$1 (0.935); 5: $2 (0.0514); 6: $18 (0.0115); 7: $180 (0.0016); 8: $1,300 (1.35·10⁻⁴); 9: $2,600 (6.12·10⁻⁶); 10: $10,000 (1.12·10⁻⁷). Find E(X).</span><span data-l="kk">10 санға $1 бәс. Төлемдер: 5-тен аз дұрыс: −$1 (0,935); 5: $2 (0,0514); 6: $18 (0,0115); 7: $180 (0,0016); 8: $1300 (1,35·10⁻⁴); 9: $2600 (6,12·10⁻⁶); 10: $10 000 (1,12·10⁻⁷). E(X)-ті тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div class="tbl-wrap"><table class="num">
+      <thead><tr><th><span data-l="ru">Угадано</span><span data-l="en">Correct</span><span data-l="kk">Дұрыс</span></th><th>k</th><th>p(k)</th><th>k·p(k)</th></tr></thead>
+      <tbody><tr><td>&lt;5</td><td>−1</td><td>0.935</td><td>−0.93500</td></tr><tr><td>5</td><td>2</td><td>0.0514</td><td>0.10280</td></tr><tr><td>6</td><td>18</td><td>0.0115</td><td>0.20700</td></tr><tr><td>7</td><td>180</td><td>0.0016</td><td>0.28800</td></tr><tr><td>8</td><td>1300</td><td>1.35e−4</td><td>0.17550</td></tr><tr><td>9</td><td>2600</td><td>6.12e−6</td><td>0.01591</td></tr><tr><td>10</td><td>10 000</td><td>1.12e−7</td><td>0.00112</td></tr></tbody>
+      <tfoot><tr><td>Σ</td><td></td><td>1.0000</td><td>−0.1447</td></tr></tfoot></table></div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">E(X) ≈ −$0,145. Игрок теряет около 14,5¢ с каждого доллара.</span><span data-l="en">E(X) ≈ −$0.145. The player loses about 14.5¢ per dollar bet.</span><span data-l="kk">E(X) ≈ −$0,145. Ойыншы әр доллардан шамамен 14,5¢ жоғалтады.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">крупные выигрыши огромны, но их вероятность крошечная, поэтому вклад 10 000·1,12·10⁻⁷ всего 0,001.</span><span data-l="en">the big prizes are huge, but their probabilities are tiny, so the contribution 10,000·1.12·10⁻⁷ is only 0.001.</span><span data-l="kk">үлкен ұтыстар өте үлкен, бірақ ықтималдықтары өте аз, сондықтан 10 000·1,12·10⁻⁷ үлесі небәрі 0,001.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">забыть строку «меньше 5» с −1. Без неё ответ получится положительным.</span><span data-l="en">forgetting the “fewer than 5” row with −1. Without it the answer comes out positive.</span><span data-l="kk">«5-тен аз» жолын (−1) ұмыту. Онсыз жауап оң шығады.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t2">
+  <div class="thead"><span class="tid">3.5.2</span><h3><span data-l="ru">Рулетка в Монте-Карло</span><span data-l="en">Roulette in Monte Carlo</span><span data-l="kk">Монте-Карлодағы рулетка</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a></span></div>
+  <p class="cond"><span data-l="ru">В Монте-Карло есть 0, но нет 00 (37 ячеек, 18 красных). Найди E ставки $1 на красное. Поездка стоит $3000. Сколько нужно поставить в сумме, чтобы поездка окупилась по сравнению с Лас-Вегасом (38 ячеек)?</span><span data-l="en">Monte Carlo wheels have 0 but no 00 (37 slots, 18 red). Find the expected value of a $1 bet on red. A trip costs $3,000. How much must a player bet in total for the trip to pay off compared with Las Vegas (38 slots)?</span><span data-l="kk">Монте-Карло рулеткасында 0 бар, бірақ 00 жоқ (37 ұяшық, 18 қызыл). Қызылға тігілген $1 бәстің математикалық үмітін тап. Сапар $3000 тұрады. Лас-Вегаспен (38 ұяшық) салыстырғанда сапар ақталуы үшін ойыншы барлығы қанша бәс тігуі керек?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div data-l="ru kk">\[E_{\text{MC}}=1\cdot\tfrac{18}{37}-1\cdot\tfrac{19}{37}=-\tfrac{1}{37}\approx-0{,}0270\]</div><div data-l="en">\[E_{\text{MC}}=1\cdot\tfrac{18}{37}-1\cdot\tfrac{19}{37}=-\tfrac{1}{37}\approx-0.0270\]</div>
+    <div data-l="ru kk">\[E_{\text{LV}}=1\cdot\tfrac{18}{38}-1\cdot\tfrac{20}{38}=-\tfrac{1}{19}\approx-0{,}0526\]</div><div data-l="en">\[E_{\text{LV}}=1\cdot\tfrac{18}{38}-1\cdot\tfrac{20}{38}=-\tfrac{1}{19}\approx-0.0526\]</div>
+    <p><span data-l="ru">Каждый доллар в Монте-Карло экономит \(\tfrac1{19}-\tfrac1{37}=\tfrac{18}{703}\approx0{,}0256\) доллара. Общая экономия должна покрыть $3000:</span><span data-l="en">Each dollar bet in Monte Carlo saves \(\tfrac1{19}-\tfrac1{37}=\tfrac{18}{703}\approx0.0256\) dollars. The total saving must cover $3,000:</span><span data-l="kk">Монте-Карлода тігілген әр доллар \(\tfrac1{19}-\tfrac1{37}=\tfrac{18}{703}\approx0{,}0256\) доллар үнемдейді. Жалпы үнем $3000-ды жабуы керек:</span></p>
+    \[B\cdot\tfrac{18}{703}\ge3000\ \Rightarrow\ B\ge\tfrac{3000\cdot703}{18}\approx117\,167\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">E = −1/37 ≈ −2,7¢. Ставок в сумме нужно примерно на $117 167.</span><span data-l="en">E = −1/37 ≈ −2.7¢. The total amount bet must be about $117,167.</span><span data-l="kk">E = −1/37 ≈ −2,7¢. Жалпы бәс шамамен $117 167 болуы керек.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">экономия на одной ставке — разность двух матожиданий. Общая экономия растёт пропорционально сумме ставок (<a href="#F7">F7</a>).</span><span data-l="en">the saving on one bet is the difference of two expected values. The total saving grows in proportion to the total amount bet (<a href="#F7">F7</a>).</span><span data-l="kk">бір бәстегі үнем — екі математикалық үміттің айырмасы. Жалпы үнем бәстердің жалпы сомасына пропорционал өседі (<a href="#F7">F7</a>).</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">делить $3000 на 1/37, а не на разность 1/19 − 1/37. Нас интересует выигрыш по сравнению с Вегасом.</span><span data-l="en">dividing $3,000 by 1/37 instead of by the difference 1/19 − 1/37. What matters is the gain compared with Vegas.</span><span data-l="kk">$3000-ды 1/19 − 1/37 айырмасына емес, 1/37-ге бөлу. Бізге Вегаспен салыстырғандағы пайда керек.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t3">
+  <div class="thead"><span class="tid">3.5.3</span><h3><span data-l="ru">Прибыль Acme</span><span data-l="en">Acme's profit</span><span data-l="kk">Acme пайдасы</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a> <a class="flink" href="#F7">F7</a></span></div>
+  <p class="cond"><span data-l="ru">Распределение из примера 3.3.7 (таблица 3.3.4): Acme делает 3 генератора в день; каждый с вероятностью 0,05 требует доработки. Исправный даёт +$10 000, доработка стоит −$2000. X — дневная прибыль: $30 000 (0,857375), $18 000 (0,135375), $6 000 (0,007125), −$6 000 (0,000125). Найди среднюю дневную прибыль.</span><span data-l="en">Use the pdf from Example 3.3.7 (Table 3.3.4): Acme makes 3 generators a day; each needs retooling with probability 0.05. A good one earns $10,000, retooling costs $2,000. X is the daily profit: $30,000 (0.857375), $18,000 (0.135375), $6,000 (0.007125), −$6,000 (0.000125). Find the average daily profit.</span><span data-l="kk">3.3.7-мысалдағы үлестірімді қолдан (3.3.4-кесте): Acme күніне 3 генератор шығарады; әрқайсысы 0,05 ықтималдықпен қайта өңдеуді қажет етеді. Жарамдысы $10 000 пайда әкеледі, қайта өңдеу $2000 тұрады. X — күндік пайда: $30 000 (0,857375), $18 000 (0,135375), $6 000 (0,007125), −$6 000 (0,000125). Орташа күндік пайданы тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div class="tbl-wrap"><table class="num"><thead><tr><th><span data-l="ru">Брак</span><span data-l="en">Defective</span><span data-l="kk">Ақаулы</span></th><th>k, $</th><th>p(k)</th><th>k·p(k)</th></tr></thead>
+    <tbody><tr><td>0</td><td>30 000</td><td>0.857375</td><td>25 721.25</td></tr><tr><td>1</td><td>18 000</td><td>0.135375</td><td>2 436.75</td></tr><tr><td>2</td><td>6 000</td><td>0.007125</td><td>42.75</td></tr><tr><td>3</td><td>−6 000</td><td>0.000125</td><td>−0.75</td></tr></tbody>
+    <tfoot><tr><td>Σ</td><td></td><td>1</td><td>28 200</td></tr></tfoot></table></div>
+    <p><span data-l="ru">Проверка через линейность: один генератор даёт \(10000\cdot0{,}95-2000\cdot0{,}05=9400\), три дают 28 200.</span><span data-l="en">Check via linearity: one generator gives \(10000\cdot0.95-2000\cdot0.05=9400\), three give 28,200.</span><span data-l="kk">Сызықтылық арқылы тексеру: бір генератор \(10000\cdot0{,}95-2000\cdot0{,}05=9400\) береді, үшеуі 28 200 береді.</span></p>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">E(X) = $28 200 в день.</span><span data-l="en">E(X) = $28,200 per day.</span><span data-l="kk">E(X) = күніне $28 200.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">вероятности — бином с n=3, p=0,05 (брак). Короткий путь через <a href="#F7">F7</a> даёт тот же ответ без таблицы.</span><span data-l="en">the probabilities are binomial with n=3, p=0.05 (defective). The shortcut via <a href="#F7">F7</a> gives the same answer without a table.</span><span data-l="kk">ықтималдықтар n=3, p=0,05 (ақау) биномдық үлестірім бойынша. <a href="#F7">F7</a> арқылы қысқа жол кестесіз сол жауапты береді.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">для брака прибыль не 0, а −2000. Тогда «1 брак» = 2·10 000 − 2000 = 18 000.</span><span data-l="en">a defective generator gives −2,000, not 0. So “1 defective” = 2·10,000 − 2,000 = 18,000.</span><span data-l="kk">ақаулы генератор 0 емес, −2000 береді. Сондықтан «1 ақау» = 2·10 000 − 2000 = 18 000.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t4">
+  <div class="thead"><span class="tid">3.5.4</span><h3>Redball</h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a></span></div>
+  <p class="cond"><span data-l="ru">В миске 4 белых и 2 красных шарика. Тянем 2 без возвращения. Ставка $5. Правило A: 0 красных → $0, 1 → $2, 2 → $10. Правило B: 0 → $0, 1 → $1, 2 → $20. Какое правило выбрать?</span><span data-l="en">A bowl has 4 white and 2 red ping-pong balls. Two are drawn without replacement. The bet is $5. Rule A: 0 red → $0, 1 → $2, 2 → $10. Rule B: 0 → $0, 1 → $1, 2 → $20. Which rule should you choose?</span><span data-l="kk">Ыдыста 4 ақ және 2 қызыл шарик бар. 2 шарикті қайтарусыз аламыз. Бәс $5. A ережесі: 0 қызыл → $0, 1 → $2, 2 → $10. B ережесі: 0 → $0, 1 → $1, 2 → $20. Қай ережені таңдау керек?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[P(0)=\tfrac{\binom42}{\binom62}=\tfrac{6}{15},\quad P(1)=\tfrac{\binom41\binom21}{\binom62}=\tfrac{8}{15},\quad P(2)=\tfrac{\binom22}{\binom62}=\tfrac1{15}\]
+    <div data-l="ru kk">\[E_A=2\cdot\tfrac8{15}+10\cdot\tfrac1{15}=\tfrac{26}{15}\approx1{,}73,\qquad E_B=1\cdot\tfrac8{15}+20\cdot\tfrac1{15}=\tfrac{28}{15}\approx1{,}87\]</div><div data-l="en">\[E_A=2\cdot\tfrac8{15}+10\cdot\tfrac1{15}=\tfrac{26}{15}\approx1.73,\qquad E_B=1\cdot\tfrac8{15}+20\cdot\tfrac1{15}=\tfrac{28}{15}\approx1.87\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">правило B, у него E больше на 2/15 ≈ $0,13. Обе игры невыгодны: при ставке $5 теряешь в среднем $3,27 (A) или $3,13 (B).</span><span data-l="en">rule B: its E is larger by 2/15 ≈ $0.13. Both games lose money: with a $5 bet you lose on average $3.27 (A) or $3.13 (B).</span><span data-l="kk">B ережесі: оның E мәні 2/15 ≈ $0,13-ке артық. Екі ойын да тиімсіз: $5 бәсте орта есеппен $3,27 (A) немесе $3,13 (B) жоғалтасың.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">B хуже платит за 1 красный, но гораздо лучше за 2. Редкое событие с большой выплатой здесь перевешивает.</span><span data-l="en">B pays less for 1 red but much more for 2. Here the rare event with a large payoff outweighs.</span><span data-l="kk">B 1 қызыл үшін аз, ал 2 қызыл үшін әлдеқайда көп төлейді. Мұнда сирек, бірақ үлкен төлемді оқиға басым түседі.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">считать вероятности как бином (с возвращением). Без возвращения нужны сочетания.</span><span data-l="en">computing the probabilities as binomial (with replacement). Without replacement you need combinations.</span><span data-l="kk">ықтималдықтарды биномдық (қайтарумен) деп есептеу. Қайтарусыз таңдауда терулер қажет.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t5">
+  <div class="thead"><span class="tid">3.5.5</span><h3><span data-l="ru">Страховка на 5 лет</span><span data-l="en">Five-year term policy</span><span data-l="kk">5 жылдық сақтандыру</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a> <a class="flink" href="#F7">F7</a></span></div>
+  <p class="cond"><span data-l="ru">Полис $50 000 на 5 лет, взнос $P каждый год. Вероятности смерти по годам: 0,00051; 0,00052; 0,00054; 0,00056; 0,00059. В год k компания теряет 50 000 − P с вероятностью qₖ и получает P с вероятностью 1 − qₖ. Компания хочет в среднем $1000. Найди P.</span><span data-l="en">A $50,000 five-year policy, premium $P paid each year. Probabilities of death by year: 0.00051; 0.00052; 0.00054; 0.00056; 0.00059. In year k the company loses 50,000 − P with probability qₖ and gains P with probability 1 − qₖ. The company wants to earn $1,000 on average. Find P.</span><span data-l="kk">$50 000-дық 5 жылдық полис, әр жылы $P жарна. Жылдар бойынша қайтыс болу ықтималдықтары: 0,00051; 0,00052; 0,00054; 0,00056; 0,00059. k-жылы компания qₖ ықтималдықпен 50 000 − P жоғалтады және 1 − qₖ ықтималдықпен P алады. Компания орта есеппен $1000 тапқысы келеді. P-ны тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[E(X_k)=P(1-q_k)+(P-50000)q_k=P-50000\,q_k\]
+    <div data-l="ru kk">\[\sum q_k=0{,}00272,\qquad 5P-50000\cdot0{,}00272=1000\]</div><div data-l="en">\[\sum q_k=0.00272,\qquad 5P-50000\cdot0.00272=1000\]</div>
+    <div data-l="ru kk">\[5P=1136\ \Rightarrow\ P=227{,}20\]</div><div data-l="en">\[5P=1136\ \Rightarrow\ P=227.20\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">P ≈ $227,20 в год.</span><span data-l="en">P ≈ $227.20 per year.</span><span data-l="kk">P ≈ жылына $227,20.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">прибыль за 5 лет — сумма прибылей по годам, а среднее суммы = сумма средних (<a href="#F7">F7</a>). «Безубыточный» взнос был бы $27,20.</span><span data-l="en">the 5-year profit is the sum of yearly profits, and the mean of a sum is the sum of the means (<a href="#F7">F7</a>). The break-even premium would be $27.20.</span><span data-l="kk">5 жылдық пайда — жылдық пайдалардың қосындысы, ал қосындының орташасы орташалардың қосындысына тең (<a href="#F7">F7</a>). Шығынсыз жарна $27,20 болар еді.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">писать «теряет 50 000» вместо 50 000 − P. Взнос в год смерти компания тоже получила.</span><span data-l="en">writing “loses 50,000” instead of 50,000 − P. The company also received the premium in the year of death.</span><span data-l="kk">50 000 − P орнына «50 000 жоғалтады» деп жазу. Қайтыс болған жылы да компания жарнаны алған.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t6">
+  <div class="thead"><span class="tid">3.5.6</span><h3><span data-l="ru">Бракованные чипы</span><span data-l="en">Defective chips</span><span data-l="kk">Ақаулы чиптер</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F5">F5</a></span></div>
+  <p class="cond"><span data-l="ru">100 чипов памяти, 4% бракованные. Случайно отбирают 20 и отправляют на сборку ноутбуков. X — число ноутбуков с бракованным чипом. Найди E(X).</span><span data-l="en">100 memory chips, 4% are defective. A random sample of 20 is shipped for laptop assembly. X is the number of laptops with a faulty chip. Find E(X).</span><span data-l="kk">100 жад чипі, 4%-ы ақаулы. Кездейсоқ 20 чип ноутбук жинауға жіберіледі. X — ақаулы чипі бар ноутбуктар саны. E(X)-ті тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Бракованных r = 4, исправных w = 96, n = 20, выбор без возвращения.</span><span data-l="en">Defective r = 4, good w = 96, n = 20, sampling without replacement.</span><span data-l="kk">Ақаулы r = 4, жарамды w = 96, n = 20, қайтарусыз таңдау.</span></p>
+    <div data-l="ru kk">\[E(X)=\frac{rn}{r+w}=\frac{4\cdot20}{100}=0{,}8\]</div><div data-l="en">\[E(X)=\frac{rn}{r+w}=\frac{4\cdot20}{100}=0.8\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">E(X) = 0,8.</span><span data-l="en">E(X) = 0.8.</span><span data-l="kk">E(X) = 0,8.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">каждый из 20 чипов бракованный с вероятностью 4/100. Выбор без возвращения меняет разброс, но не среднее.</span><span data-l="en">each of the 20 chips is defective with probability 4/100. Sampling without replacement changes the spread, not the mean.</span><span data-l="kk">20 чиптің әрқайсысы 4/100 ықтималдықпен ақаулы. Қайтарусыз таңдау шашырауды өзгертеді, орташаны емес.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">перебирать все k = 0..4 вручную. Это верно, но долго. Узнавай схему урны сразу.</span><span data-l="en">summing over k = 0..4 by hand. It works but is slow. Recognize the urn scheme at once.</span><span data-l="kk">k = 0..4 бойынша қолмен қосу. Дұрыс, бірақ ұзақ. Урна сұлбасын бірден таны.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t7">
+  <div class="thead"><span class="tid">3.5.7</span><h3><span data-l="ru">Прививки в школе</span><span data-l="en">School vaccinations</span><span data-l="kk">Мектептегі екпелер</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F4">F4</a></span></div>
+  <p class="cond"><span data-l="ru">642 новых ученика, из них 125 не привиты как положено. В день прививок 12% учеников отсутствуют. Сколько непривитых в среднем останется без прививки?</span><span data-l="en">642 new students; 125 are not adequately vaccinated. On vaccination day 12% of the students are absent. How many inadequately vaccinated students can be expected to remain so?</span><span data-l="kk">642 жаңа оқушы, оның 125-і толық екпе алмаған. Екпе күні оқушылардың 12%-ы келмейді. Толық екпе алмағандардың орта есеппен қаншасы екпесіз қалады?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Каждый из 125 непривитых отсутствует с вероятностью 0,12. X — число отсутствующих непривитых.</span><span data-l="en">Each of the 125 unvaccinated students is absent with probability 0.12. X is the number of absent unvaccinated students.</span><span data-l="kk">125 екпесіз оқушының әрқайсысы 0,12 ықтималдықпен келмейді. X — келмеген екпесіз оқушылар саны.</span></p>
+    <div data-l="ru kk">\[E(X)=125\cdot0{,}12=15\]</div><div data-l="en">\[E(X)=125\cdot0.12=15\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">в среднем 15 учеников.</span><span data-l="en">15 students on average.</span><span data-l="kk">орта есеппен 15 оқушы.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">это схема «n испытаний, вероятность успеха p». Число 642 отвлекает: оно не нужно, если 12% относится к каждому ученику.</span><span data-l="en">this is the “n trials, success probability p” scheme. The number 642 is a distractor: it is not needed if the 12% applies to each student.</span><span data-l="kk">бұл «n сынақ, сәттілік ықтималдығы p» сұлбасы. 642 саны алаңдатады: 12% әр оқушыға қатысты болса, ол қажет емес.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">считать 642·0,12 ≈ 77. Это все отсутствующие, а спрашивают только про непривитых.</span><span data-l="en">computing 642·0.12 ≈ 77. That is all absent students, but the question is only about the unvaccinated ones.</span><span data-l="kk">642·0,12 ≈ 77 деп есептеу. Бұл барлық келмегендер, ал сұрақ тек екпесіздер туралы.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t8">
+  <div class="thead"><span class="tid">3.5.8</span><h3><span data-l="ru">E(Y) для четырёх плотностей</span><span data-l="en">E(Y) for four pdfs</span><span data-l="kk">Төрт тығыздық үшін E(Y)</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F2">F2</a> <a class="flink" href="#F12">F12</a></span></div>
+  <p class="cond"><span data-l="ru">(a) \(3(1-y)^2,\ 0\le y\le1\); (b) \(4ye^{-2y},\ y\ge0\); (c) \(3/4\) на [0,1], \(1/4\) на [2,3]; (d) \(\sin y,\ 0\le y\le\pi/2\).</span><span data-l="en">(a) \(3(1-y)^2,\ 0\le y\le1\); (b) \(4ye^{-2y},\ y\ge0\); (c) \(3/4\) on [0,1], \(1/4\) on [2,3]; (d) \(\sin y,\ 0\le y\le\pi/2\).</span><span data-l="kk">(a) \(3(1-y)^2,\ 0\le y\le1\); (b) \(4ye^{-2y},\ y\ge0\); (c) [0,1]-де \(3/4\), [2,3]-те \(1/4\); (d) \(\sin y,\ 0\le y\le\pi/2\).</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[\text{(a)}\ \int_0^1 3y(1-y)^2dy=3\left(\tfrac12-\tfrac23+\tfrac14\right)=\tfrac14\]
+    \[\text{(b)}\ \int_0^\infty4y^2e^{-2y}dy=4\cdot\tfrac{2!}{2^3}=1\]
+    \[\text{(c)}\ \tfrac34\int_0^1y\,dy+\tfrac14\int_2^3y\,dy=\tfrac38+\tfrac14\cdot\tfrac52=\tfrac38+\tfrac58=1\]
+    \[\text{(d)}\ \int_0^{\pi/2}y\sin y\,dy=\big[-y\cos y+\sin y\big]_0^{\pi/2}=1\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> (a) 1/4; (b) 1; (c) 1; (d) 1.</p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">(a) плотность прижата к нулю, поэтому среднее маленькое. (c) Центр тяжести между двумя кусками, ближе к тяжёлому левому. Сам центр, точка 1, может лежать там, где f = 0.</span><span data-l="en">(a) the density is concentrated near zero, so the mean is small. (c) The center of gravity lies between the two pieces, closer to the heavier left one. The center itself, the point 1, can lie where f = 0.</span><span data-l="kk">(a) тығыздық нөлге жақын шоғырланған, сондықтан орташа кіші. (c) Ауырлық центрі екі бөліктің арасында, ауырырақ сол жақ бөлікке жақын. Центрдің өзі, 1 нүктесі, f = 0 болатын жерде жатуы мүмкін.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">в (c) интегрировать по [0,3] целиком одной формулой. Интеграл разбивается по кускам.</span><span data-l="en">in (c) integrating over all of [0,3] with one formula. The integral splits by pieces.</span><span data-l="kk">(c)-да бүкіл [0,3] бойынша бір формуламен интегралдау. Интеграл бөліктерге бөлінеді.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t9">
+  <div class="thead"><span class="tid">3.5.9</span><h3><span data-l="ru">Ремиссия малярии</span><span data-l="en">Malaria remission</span><span data-l="kk">Безгектің ремиссиясы</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F2">F2</a></span></div>
+  <p class="cond"><span data-l="ru">Длительность ремиссии Y (годы): \(f_Y(y)=\tfrac19y^2,\ 0\le y\le3\). Найди среднюю длительность.</span><span data-l="en">Remission time Y (years): \(f_Y(y)=\tfrac19y^2,\ 0\le y\le3\). Find the average length.</span><span data-l="kk">Ремиссия ұзақтығы Y (жыл): \(f_Y(y)=\tfrac19y^2,\ 0\le y\le3\). Орташа ұзақтығын тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[E(Y)=\int_0^3 y\cdot\tfrac19y^2dy=\tfrac19\cdot\tfrac{y^4}{4}\Big|_0^3=\tfrac{81}{36}=\tfrac94\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">2,25 года.</span><span data-l="en">2.25 years.</span><span data-l="kk">2,25 жыл.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">плотность растёт к 3, поэтому центр тяжести правее середины 1,5.</span><span data-l="en">the density grows toward 3, so the center of gravity is to the right of the midpoint 1.5.</span><span data-l="kk">тығыздық 3-ке қарай өседі, сондықтан ауырлық центрі 1,5 ортасынан оңға қарай.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">посчитать ∫f(y)dy (это 1) вместо ∫y·f(y)dy.</span><span data-l="en">computing ∫f(y)dy (which is 1) instead of ∫y·f(y)dy.</span><span data-l="kk">∫y·f(y)dy орнына ∫f(y)dy (ол 1-ге тең) есептеу.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t10">
+  <div class="thead"><span class="tid">3.5.10</span><h3><span data-l="ru">Равномерное распределение</span><span data-l="en">Uniform distribution</span><span data-l="kk">Бірқалыпты үлестірім</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F2">F2</a> <a class="flink" href="#F10">F10</a></span></div>
+  <p class="cond"><span data-l="ru">\(f_Y(y)=\tfrac1{b-a}\) на [a, b]. Найди E(Y) по определению. Потом выведи ответ из идеи «центр тяжести».</span><span data-l="en">\(f_Y(y)=\tfrac1{b-a}\) on [a, b]. Find E(Y) from the definition. Then deduce the answer from the “center of gravity” idea.</span><span data-l="kk">[a, b] аралығында \(f_Y(y)=\tfrac1{b-a}\). E(Y)-ті анықтама бойынша тап. Содан кейін жауапты «ауырлық центрі» идеясынан шығар.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[E(Y)=\int_a^b\frac{y}{b-a}dy=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}{2}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> (a+b)/2.</p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">прямоугольник симметричен относительно середины. Центр тяжести симметричной фигуры — в центре симметрии.</span><span data-l="en">the rectangle is symmetric about its midpoint. The center of gravity of a symmetric shape is at its center of symmetry.</span><span data-l="kk">тіктөртбұрыш ортаңғы нүктеге қатысты симметриялы. Симметриялы фигураның ауырлық центрі симметрия центрінде.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">забыть множитель 1/(b−a) и получить (b²−a²)/2.</span><span data-l="en">forgetting the factor 1/(b−a) and getting (b²−a²)/2.</span><span data-l="kk">1/(b−a) көбейткішін ұмытып, (b²−a²)/2 алу.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t11">
+  <div class="thead"><span class="tid">3.5.11</span><h3><span data-l="ru">Экспонента: E = 1/λ</span><span data-l="en">Exponential: E = 1/λ</span><span data-l="kk">Көрсеткіштік үлестірім: E = 1/λ</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F2">F2</a> <a class="flink" href="#F9">F9</a></span></div>
+  <p class="cond"><span data-l="ru">Докажи, что для \(f_Y(y)=\lambda e^{-\lambda y},\ y\gt0\), матожидание равно 1/λ.</span><span data-l="en">Show that for \(f_Y(y)=\lambda e^{-\lambda y},\ y\gt0\), the expected value is 1/λ.</span><span data-l="kk">\(f_Y(y)=\lambda e^{-\lambda y},\ y\gt0\) үшін математикалық үміт 1/λ-ға тең екенін көрсет.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Интегрируем по частям: \(u=y,\ dv=\lambda e^{-\lambda y}dy,\ v=-e^{-\lambda y}\).</span><span data-l="en">Integrate by parts: \(u=y,\ dv=\lambda e^{-\lambda y}dy,\ v=-e^{-\lambda y}\).</span><span data-l="kk">Бөліктеп интегралдаймыз: \(u=y,\ dv=\lambda e^{-\lambda y}dy,\ v=-e^{-\lambda y}\).</span></p>
+    \[E(Y)=\big[-ye^{-\lambda y}\big]_0^\infty+\int_0^\infty e^{-\lambda y}dy=0+\tfrac1\lambda\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> E(Y) = 1/λ.</p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">λ — интенсивность событий. Если в среднем 2 события в час, одно приходится ждать в среднем полчаса.</span><span data-l="en">λ is the rate of events. If on average 2 events happen per hour, you wait half an hour for one on average.</span><span data-l="kk">λ — оқиғалардың жиілігі (қарқындылығы). Орта есеппен сағатына 2 оқиға болса, біреуін орта есеппен жарты сағат күтесің.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">путать λ и μ. В книге пишут то \(\lambda e^{-\lambda y}\), то \(\tfrac1\mu e^{-y/\mu}\). E равно μ = 1/λ.</span><span data-l="en">mixing up λ and μ. The book writes \(\lambda e^{-\lambda y}\) in some places and \(\tfrac1\mu e^{-y/\mu}\) in others. E equals μ = 1/λ.</span><span data-l="kk">λ мен μ-ді шатастыру. Кітапта кейде \(\lambda e^{-\lambda y}\), кейде \(\tfrac1\mu e^{-y/\mu}\) жазылады. E = μ = 1/λ.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t12">
+  <div class="thead"><span class="tid">3.5.12</span><h3><span data-l="ru">Плотность без матожидания</span><span data-l="en">A pdf with no expected value</span><span data-l="kk">Математикалық үміті жоқ тығыздық</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F3">F3</a></span></div>
+  <p class="cond"><span data-l="ru">Покажи, что \(f_Y(y)=1/y^2,\ y\ge1\) — настоящая плотность, но у Y нет конечного матожидания.</span><span data-l="en">Show that \(f_Y(y)=1/y^2,\ y\ge1\) is a valid pdf, but Y has no finite expected value.</span><span data-l="kk">\(f_Y(y)=1/y^2,\ y\ge1\) — дұрыс тығыздық екенін, бірақ Y-тің ақырлы математикалық үміті жоқ екенін көрсет.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">f ≥ 0 и \(\int_1^\infty y^{-2}dy=\big[-1/y\big]_1^\infty=1\). Значит, это плотность.</span><span data-l="en">f ≥ 0 and \(\int_1^\infty y^{-2}dy=\big[-1/y\big]_1^\infty=1\). So it is a pdf.</span><span data-l="kk">f ≥ 0 және \(\int_1^\infty y^{-2}dy=\big[-1/y\big]_1^\infty=1\). Демек, бұл тығыздық.</span></p>
+    \[E(Y)=\int_1^\infty y\cdot\tfrac1{y^2}dy=\int_1^\infty\tfrac{dy}{y}=\ln y\Big|_1^\infty=\infty\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">плотность корректна, E(Y) = ∞ (не существует).</span><span data-l="en">the pdf is valid; E(Y) = ∞ (does not exist).</span><span data-l="kk">тығыздық дұрыс; E(Y) = ∞ (жоқ).</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">хвост 1/y² убывает достаточно быстро, чтобы площадь была 1. Но после умножения на y остаётся 1/y, а его интеграл расходится.</span><span data-l="en">the 1/y² tail decays fast enough for the area to be 1. But after multiplying by y we get 1/y, and its integral diverges.</span><span data-l="kk">1/y² «құйрығы» аудан 1 болатындай жылдам кемиді. Бірақ y-ке көбейткенде 1/y қалады, ал оның интегралы жинақталмайды.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">проверить только площадь и решить, что E тоже конечно.</span><span data-l="en">checking only the area and concluding that E is finite too.</span><span data-l="kk">тек ауданды тексеріп, E да ақырлы деп қорытынды жасау.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t13">
+  <div class="thead"><span class="tid">3.5.13</span><h3><span data-l="ru">Техосмотр 200 машин</span><span data-l="en">Emissions test for 200 cars</span><span data-l="kk">200 көлікті тексеру</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a> <a class="flink" href="#F4">F4</a></span></div>
+  <p class="cond"><span data-l="ru">Машина проходит тест с вероятностью 0,8. Проверят 200 машин. Запиши две формулы для ожидаемого числа прошедших.</span><span data-l="en">A car passes the emissions test with probability 0.8. 200 cars will be checked. Write two formulas for the expected number that pass.</span><span data-l="kk">Көлік сынақтан 0,8 ықтималдықпен өтеді. 200 көлік тексеріледі. Сынақтан өтетін көліктердің күтілетін санының екі формуласын жаз.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div data-l="ru kk">\[E(X)=\sum_{k=0}^{200}k\binom{200}{k}(0{,}8)^k(0{,}2)^{200-k},\qquad E(X)=np=200\cdot0{,}8\]</div><div data-l="en">\[E(X)=\sum_{k=0}^{200}k\binom{200}{k}(0.8)^k(0.2)^{200-k},\qquad E(X)=np=200\cdot0.8\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">обе формулы дают 160.</span><span data-l="en">both formulas give 160.</span><span data-l="kk">екі формула да 160 береді.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">первая — определение <a href="#F1">F1</a>, вторая — теорема <a href="#F4">F4</a>, которая сворачивает эту сумму.</span><span data-l="en">the first is definition <a href="#F1">F1</a>, the second is theorem <a href="#F4">F4</a>, which collapses this sum.</span><span data-l="kk">біріншісі — <a href="#F1">F1</a> анықтамасы, екіншісі — осы қосындыны ықшамдайтын <a href="#F4">F4</a> теоремасы.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">начать сумму с k = 1 и думать, что это ошибка. Слагаемое k = 0 равно нулю, так что оба варианта верны.</span><span data-l="en">starting the sum at k = 1 and thinking it is a mistake. The k = 0 term is zero, so both versions are correct.</span><span data-l="kk">қосындыны k = 1-ден бастап, оны қате деп ойлау. k = 0 мүшесі нөлге тең, сондықтан екі нұсқа да дұрыс.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t14">
+  <div class="thead"><span class="tid">3.5.14</span><h3><span data-l="ru">15 наблюдений</span><span data-l="en">15 observations</span><span data-l="kk">15 бақылау</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F4">F4</a></span></div>
+  <p class="cond"><span data-l="ru">15 наблюдений из \(f_Y(y)=3y^2,\ 0\le y\le1\). X — сколько из них попали в интервал (1/2, 1). Найди E(X).</span><span data-l="en">15 observations are drawn from \(f_Y(y)=3y^2,\ 0\le y\le1\). X is how many of them fall in (1/2, 1). Find E(X).</span><span data-l="kk">\(f_Y(y)=3y^2,\ 0\le y\le1\) тығыздығынан 15 бақылау алынды. X — олардың қаншасы (1/2, 1) аралығына түсетіні. E(X)-ті тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[p=\int_{1/2}^{1}3y^2dy=1-\tfrac18=\tfrac78,\qquad E(X)=15\cdot\tfrac78=\tfrac{105}{8}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">13,125.</span><span data-l="en">13.125.</span><span data-l="kk">13,125.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">каждое наблюдение — отдельное испытание «попало или нет». Сначала из плотности находим p, потом бином.</span><span data-l="en">each observation is a separate trial: “inside or not”. First get p from the pdf, then use the binomial.</span><span data-l="kk">әр бақылау — жеке сынақ: «түсті ме, жоқ па». Алдымен тығыздықтан p-ны тап, содан кейін биномдық үлестірімді қолдан.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">считать E(Y) вместо вероятности попадания. Здесь X — счётчик, а не значение Y.</span><span data-l="en">computing E(Y) instead of the probability of landing in the interval. Here X is a count, not a value of Y.</span><span data-l="kk">аралыққа түсу ықтималдығының орнына E(Y)-ті есептеу. Мұнда X — санауыш, Y-тің мәні емес.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t15">
+  <div class="thead"><span class="tid">3.5.15</span><h3><span data-l="ru">Налог в ноябре</span><span data-l="en">November wheel tax</span><span data-l="kk">Қарашадағы салық</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F4">F4</a> <a class="flink" href="#F7">F7</a></span></div>
+  <p class="cond"><span data-l="ru">74 806 машин, налог $50. Наклейку покупают в месяц дня рождения владельца. Сколько налога город ожидает получить в ноябре?</span><span data-l="en">74,806 cars, wheel tax $50. A decal is bought in the owner's birth month. How much tax revenue can the city expect in November?</span><span data-l="kk">74 806 көлік, салық $50. Жапсырманы иесі туған айында сатып алады. Қала қарашада қанша салық күте алады?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Считаем, что день рождения в любом месяце равновероятен: p = 1/12.</span><span data-l="en">Assume every birth month is equally likely: p = 1/12.</span><span data-l="kk">Туған айлардың бәрі тең ықтимал деп есептейміз: p = 1/12.</span></p>
+    \[E(50X)=50\cdot E(X)=50\cdot74806\cdot\tfrac1{12}\approx311\,692\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">≈ $311 692. (Если считать 30 дней из 365: ≈ $307 422.)</span><span data-l="en">≈ $311,692. (Using 30 days out of 365: ≈ $307,422.)</span><span data-l="kk">≈ $311 692. (365 күннің 30-ын алсақ: ≈ $307 422.)</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">X — число владельцев, родившихся в ноябре, это бином. Доход 50X, а E(50X) = 50E(X).</span><span data-l="en">X is the number of owners born in November, a binomial variable. Revenue is 50X, and E(50X) = 50E(X).</span><span data-l="kk">X — қарашада туған иелер саны, бұл биномдық шама. Табыс 50X, ал E(50X) = 50E(X).</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">не указать предположение про 1/12. Напиши его явно.</span><span data-l="en">not stating the 1/12 assumption. Write it explicitly.</span><span data-l="kk">1/12 болжамын көрсетпеу. Оны анық жаз.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t16">
+  <div class="thead"><span class="tid">3.5.16</span><h3><span data-l="ru">Банкротства и мошенничество</span><span data-l="en">Bankruptcies and fraud</span><span data-l="kk">Банкроттық және алаяқтық</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F4">F4</a></span></div>
+  <p class="cond"><span data-l="ru">23 из 68 банкротств вызвало мошенничество. В следующем квартале обанкротятся ещё 9 фирм. Сколько из них в среднем из-за мошенничества?</span><span data-l="en">23 of 68 bankruptcies were caused by fraud. Next quarter 9 more firms will go bankrupt. How many of them are expected to be due to fraud?</span><span data-l="kk">68 банкроттықтың 23-і алаяқтықтан болған. Келесі тоқсанда тағы 9 фирма банкрот болады. Олардың орта есеппен қаншасы алаяқтыққа байланысты болады?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div data-l="ru kk">\[p=\tfrac{23}{68},\qquad E(X)=9\cdot\tfrac{23}{68}=\tfrac{207}{68}\approx3{,}04\]</div><div data-l="en">\[p=\tfrac{23}{68},\qquad E(X)=9\cdot\tfrac{23}{68}=\tfrac{207}{68}\approx3.04\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">около 3.</span><span data-l="en">about 3.</span><span data-l="kk">шамамен 3.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">прошлую долю используем как вероятность p для каждой новой фирмы.</span><span data-l="en">we use the past proportion as the probability p for each new firm.</span><span data-l="kk">өткен үлесті әр жаңа фирма үшін p ықтималдығы ретінде аламыз.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">применять урну <a href="#F5">F5</a> с r = 23. Новые фирмы не вытягивают из старых 68.</span><span data-l="en">using the urn formula <a href="#F5">F5</a> with r = 23. The new firms are not drawn from the old 68.</span><span data-l="kk">r = 23 деп <a href="#F5">F5</a> урна формуласын қолдану. Жаңа фирмалар ескі 68-ден алынбайды.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t17">
+  <div class="thead"><span class="tid">3.5.17</span><h3><span data-l="ru">Наибольший из двух чипов</span><span data-l="en">Larger of two chips</span><span data-l="kk">Екі чиптің үлкені</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a></span></div>
+  <p class="cond"><span data-l="ru">В урне чипы 1, 2, 3, 4. Берём два без возвращения. X — больший номер. Найди E(X).</span><span data-l="en">An urn has chips numbered 1, 2, 3, 4. Two are drawn without replacement. X is the larger number. Find E(X).</span><span data-l="kk">Урнада 1, 2, 3, 4 нөмірлі чиптер бар. Екеуін қайтарусыз аламыз. X — үлкен нөмір. E(X)-ті тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Пар всего \(\binom42=6\). Максимум 2: {1,2} — 1 пара. Максимум 3: {1,3},{2,3} — 2 пары. Максимум 4: 3 пары.</span><span data-l="en">There are \(\binom42=6\) pairs. Max 2: {1,2} — 1 pair. Max 3: {1,3},{2,3} — 2 pairs. Max 4: 3 pairs.</span><span data-l="kk">Барлығы \(\binom42=6\) жұп. Ең үлкені 2: {1,2} — 1 жұп. Ең үлкені 3: {1,3},{2,3} — 2 жұп. Ең үлкені 4: 3 жұп.</span></p>
+    \[E(X)=2\cdot\tfrac16+3\cdot\tfrac26+4\cdot\tfrac36=\tfrac{20}{6}=\tfrac{10}{3}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">10/3 ≈ 3,33.</span><span data-l="en">10/3 ≈ 3.33.</span><span data-l="kk">10/3 ≈ 3,33.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">максимум k означает «k взяли, а второй — любой из k − 1 меньших». Поэтому P(X=k) = (k−1)/6.</span><span data-l="en">max = k means “k was drawn and the other is any of the k − 1 smaller ones”. So P(X=k) = (k−1)/6.</span><span data-l="kk">ең үлкені k дегеніміз «k алынды, ал екіншісі k − 1 кішісінің кез келгені». Сондықтан P(X=k) = (k−1)/6.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">считать, что X принимает 2, 3, 4 равновероятно. Вероятности разные.</span><span data-l="en">assuming X takes 2, 3, 4 with equal probability. The probabilities differ.</span><span data-l="kk">X 2, 3, 4 мәндерін тең ықтималдықпен қабылдайды деп ойлау. Ықтималдықтар әртүрлі.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t18">
+  <div class="thead"><span class="tid">3.5.18</span><h3><span data-l="ru">Три броска монеты</span><span data-l="en">Three coin tosses</span><span data-l="kk">Тиынды үш рет лақтыру</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a></span></div>
+  <p class="cond"><span data-l="ru">Монету бросают 3 раза. X = (всего орлов) × (орлов в 1-м и 3-м бросках). Найди E(X).</span><span data-l="en">A fair coin is tossed 3 times. X = (total heads) × (heads on the 1st and 3rd tosses). Find E(X).</span><span data-l="kk">Тиын 3 рет лақтырылады. X = (барлық елтаңба саны) × (1-ші және 3-ші лақтырыстардағы елтаңба саны). E(X)-ті тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div class="tbl-wrap"><table><thead><tr><th><span data-l="ru">Исход</span><span data-l="en">Outcome</span><span data-l="kk">Нәтиже</span></th><th><span data-l="ru">Всего</span><span data-l="en">Total</span><span data-l="kk">Барлығы</span></th><th><span data-l="ru">1-й+3-й</span><span data-l="en">1st+3rd</span><span data-l="kk">1-ші+3-ші</span></th><th>X</th></tr></thead>
+    <tbody><tr><td><span data-l="ru">ООО</span><span data-l="en">HHH</span><span data-l="kk">ЕЕЕ</span></td><td>3</td><td>2</td><td>6</td></tr><tr><td><span data-l="ru">ООР</span><span data-l="en">HHT</span><span data-l="kk">ЕЕС</span></td><td>2</td><td>1</td><td>2</td></tr><tr><td><span data-l="ru">ОРО</span><span data-l="en">HTH</span><span data-l="kk">ЕСЕ</span></td><td>2</td><td>2</td><td>4</td></tr><tr><td><span data-l="ru">ОРР</span><span data-l="en">HTT</span><span data-l="kk">ЕСС</span></td><td>1</td><td>1</td><td>1</td></tr><tr><td><span data-l="ru">РОО</span><span data-l="en">THH</span><span data-l="kk">СЕЕ</span></td><td>2</td><td>1</td><td>2</td></tr><tr><td><span data-l="ru">РОР</span><span data-l="en">THT</span><span data-l="kk">СЕС</span></td><td>1</td><td>0</td><td>0</td></tr><tr><td><span data-l="ru">РРО</span><span data-l="en">TTH</span><span data-l="kk">ССЕ</span></td><td>1</td><td>1</td><td>1</td></tr><tr><td><span data-l="ru">РРР</span><span data-l="en">TTT</span><span data-l="kk">ССС</span></td><td>0</td><td>0</td><td>0</td></tr></tbody>
+    <tfoot><tr><td>Σ</td><td></td><td></td><td>16</td></tr></tfoot></table></div>
+    <p class="note"><span data-l="ru">О — орёл, Р — решка.</span><span data-l="en">H — heads, T — tails.</span><span data-l="kk">Е — елтаңба, С — сан жағы.</span></p>
+    \[E(X)=\tfrac{16}{8}=2\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> E(X) = 2.</p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">исходов всего 8, все равновероятны. Перебор надёжнее любой формулы.</span><span data-l="en">there are only 8 equally likely outcomes. Enumeration is more reliable than any formula.</span><span data-l="kk">барлығы 8 тең ықтимал нәтиже. Тізіп шығу кез келген формуладан сенімдірек.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">перемножить средние: 1,5 · 1 = 1,5. Множители зависимы, поэтому E(AB) ≠ E(A)E(B).</span><span data-l="en">multiplying the means: 1.5 · 1 = 1.5. The factors are dependent, so E(AB) ≠ E(A)E(B).</span><span data-l="kk">орташаларды көбейту: 1,5 · 1 = 1,5. Көбейткіштер тәуелді, сондықтан E(AB) ≠ E(A)E(B).</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t19">
+  <div class="thead"><span class="tid">3.5.19</span><h3><span data-l="ru">Санкт-Петербург с ограничением</span><span data-l="en">St. Petersburg with a cap</span><span data-l="kk">Шектелген Санкт-Петербург ойыны</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a> <a class="flink" href="#F11">F11</a> <a class="flink" href="#F14">F14</a></span></div>
+  <p class="cond"><span data-l="ru">Выплата \(2^k\) при \(1\le k\le9\) и $1000 при \(k\ge10\). Какая ставка делает игру справедливой?</span><span data-l="en">The payoff is \(2^k\) for \(1\le k\le9\) and $1,000 for \(k\ge10\). What ante makes the game fair?</span><span data-l="kk">\(1\le k\le9\) үшін төлем \(2^k\), \(k\ge10\) үшін $1000. Ойын әділ болуы үшін бәс қандай болуы керек?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div data-l="ru kk">\[E(X)=\sum_{k=1}^{9}2^k\cdot\tfrac1{2^k}+1000\sum_{k=10}^{\infty}\tfrac1{2^k}=9+1000\cdot\tfrac1{2^9}\approx9+1{,}95\]</div><div data-l="en">\[E(X)=\sum_{k=1}^{9}2^k\cdot\tfrac1{2^k}+1000\sum_{k=10}^{\infty}\tfrac1{2^k}=9+1000\cdot\tfrac1{2^9}\approx9+1.95\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">ставка ≈ $10,95.</span><span data-l="en">ante ≈ $10.95.</span><span data-l="kk">бәс ≈ $10,95.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">первые 9 слагаемых дают по 1. Хвост \(\sum_{k\ge10}2^{-k}=2^{-9}\). Ограничение убирает бесконечность.</span><span data-l="en">the first 9 terms give 1 each. The tail \(\sum_{k\ge10}2^{-k}=2^{-9}\). The cap removes the infinity.</span><span data-l="kk">алғашқы 9 мүшенің әрқайсысы 1 береді. «Құйрығы» \(\sum_{k\ge10}2^{-k}=2^{-9}\). Шек шексіздікті жояды.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">взять \(\sum_{k\ge10}2^{-k}=2^{-10}\). Хвост этого ряда равен удвоенному первому члену.</span><span data-l="en">taking \(\sum_{k\ge10}2^{-k}=2^{-10}\). The tail of this series equals twice its first term.</span><span data-l="kk">\(\sum_{k\ge10}2^{-k}=2^{-10}\) деп алу. Бұл қатардың «құйрығы» бірінші мүшесінің екі еселенгеніне тең.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t20">
+  <div class="thead"><span class="tid">3.5.20</span><h3><span data-l="ru">Санкт-Петербург, другие выплаты</span><span data-l="en">St. Petersburg, other payoffs</span><span data-l="kk">Санкт-Петербург, басқа төлемдер</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F6">F6</a> <a class="flink" href="#F11">F11</a></span></div>
+  <p class="cond"><span data-l="ru">Найди ожидаемую выплату, если (a) выплата \(c^k\), где \(0\lt c\lt2\); (b) выплата \(\log 2^k\) (идея Бернулли о полезности денег).</span><span data-l="en">Find the expected payoff if (a) the payoff is \(c^k\), where \(0\lt c\lt2\); (b) the payoff is \(\log 2^k\) (Bernoulli's idea of the utility of money).</span><span data-l="kk">Күтілетін төлемді тап: (a) төлем \(c^k\), мұнда \(0\lt c\lt2\); (b) төлем \(\log 2^k\) (Бернуллидің ақшаның пайдалылығы туралы идеясы).</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[\text{(a)}\ \sum_{k=1}^\infty c^k\cdot\tfrac1{2^k}=\sum\left(\tfrac c2\right)^k=\frac{c/2}{1-c/2}=\frac{c}{2-c}\]
+    \[\text{(b)}\ \sum_{k=1}^\infty k\log2\cdot\tfrac1{2^k}=\log2\cdot\sum\tfrac{k}{2^k}=2\log2\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">(a) c/(2−c); (b) 2·log 2 (≈ 1,386 для ln, ≈ 0,602 для log₁₀).</span><span data-l="en">(a) c/(2−c); (b) 2·log 2 (≈ 1.386 for ln, ≈ 0.602 for log₁₀).</span><span data-l="kk">(a) c/(2−c); (b) 2·log 2 (ln үшін ≈ 1,386, log₁₀ үшін ≈ 0,602).</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">при c &lt; 2 отношение c/2 &lt; 1, ряд сходится. Логарифм «сжимает» большие выигрыши, поэтому среднее конечно.</span><span data-l="en">for c &lt; 2 the ratio c/2 &lt; 1 and the series converges. The logarithm “compresses” large payoffs, so the mean is finite.</span><span data-l="kk">c &lt; 2 болғанда c/2 &lt; 1, қатар жинақталады. Логарифм үлкен ұтыстарды «сығады», сондықтан орташа ақырлы.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">в (a) забыть условие c &lt; 2. При c = 2 получаем исходный парадокс.</span><span data-l="en">in (a) forgetting the condition c &lt; 2. At c = 2 we get the original paradox.</span><span data-l="kk">(a)-да c &lt; 2 шартын ұмыту. c = 2 болғанда бастапқы парадокс шығады.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t21">
+  <div class="thead"><span class="tid">3.5.21</span><h3><span data-l="ru">Число различных граней</span><span data-l="en">Number of distinct faces</span><span data-l="kk">Әртүрлі жақтар саны</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a></span></div>
+  <p class="cond"><span data-l="ru">Игральную кость бросают 3 раза. X — число различных выпавших граней (1, 2 или 3). Найди E(X).</span><span data-l="en">A fair die is rolled 3 times. X is the number of distinct faces showing (1, 2 or 3). Find E(X).</span><span data-l="kk">Ойын сүйегі 3 рет лақтырылады. X — түскен әртүрлі жақтар саны (1, 2 немесе 3). E(X)-ті тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[P(X=1)=\tfrac{6}{216},\quad P(X=3)=\tfrac{6\cdot5\cdot4}{216}=\tfrac{120}{216},\quad P(X=2)=\tfrac{90}{216}\]
+    \[E(X)=\frac{1\cdot6+2\cdot90+3\cdot120}{216}=\frac{546}{216}=\frac{91}{36}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">91/36 ≈ 2,53.</span><span data-l="en">91/36 ≈ 2.53.</span><span data-l="kk">91/36 ≈ 2,53.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">«все одинаковые» — 6 вариантов, «все разные» — размещения 6·5·4. Остальное — ровно две разные грани.</span><span data-l="en">“all the same”: 6 ways; “all different”: 6·5·4 arrangements. Everything else has exactly two distinct faces.</span><span data-l="kk">«бәрі бірдей» — 6 нұсқа, «бәрі әртүрлі» — 6·5·4 орналастыру. Қалғанында дәл екі әртүрлі жақ бар.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">считать P(X=2) напрямую и ошибиться в комбинаторике. Бери через дополнение.</span><span data-l="en">computing P(X=2) directly and making a counting error. Use the complement.</span><span data-l="kk">P(X=2)-ні тікелей есептеп, комбинаторикада қателесу. Толықтауыш оқиға арқылы ал.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t22">
+  <div class="thead"><span class="tid">3.5.22</span><h3><span data-l="ru">Модуль разности</span><span data-l="en">Absolute difference</span><span data-l="kk">Айырманың модулі</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F6">F6</a></span></div>
+  <p class="cond"><span data-l="ru">Из чисел 1–5 случайно выбирают два разных. Найди матожидание модуля их разности.</span><span data-l="en">Two distinct integers are chosen at random from 1–5. Find the expected absolute value of their difference.</span><span data-l="kk">1–5 сандарынан кездейсоқ екі әртүрлі сан таңдалады. Олардың айырмасы модулінің математикалық үмітін тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Пар \(\binom52=10\). Разность 1: 4 пары; 2: 3; 3: 2; 4: 1.</span><span data-l="en">There are \(\binom52=10\) pairs. Difference 1: 4 pairs; 2: 3; 3: 2; 4: 1.</span><span data-l="kk">\(\binom52=10\) жұп бар. Айырма 1: 4 жұп; 2: 3; 3: 2; 4: 1.</span></p>
+    \[E=\frac{1\cdot4+2\cdot3+3\cdot2+4\cdot1}{10}=\frac{20}{10}=2\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> 2.</p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">пар с разностью d ровно 5 − d. Чем больше разность, тем меньше пар.</span><span data-l="en">there are exactly 5 − d pairs with difference d. The larger the difference, the fewer the pairs.</span><span data-l="kk">айырмасы d болатын жұптар дәл 5 − d. Айырма неғұрлым үлкен болса, жұптар соғұрлым аз.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">считать упорядоченные пары (20) в числителе и неупорядоченные (10) в знаменателе.</span><span data-l="en">counting ordered pairs (20) in the numerator and unordered pairs (10) in the denominator.</span><span data-l="kk">алымда реттелген жұптарды (20), бөлімде реттелмегендерді (10) санау.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t23">
+  <div class="thead"><span class="tid">3.5.23</span><h3><span data-l="ru">Мировая серия</span><span data-l="en">World Series</span><span data-l="kk">Әлемдік серия</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F1">F1</a></span></div>
+  <p class="cond"><span data-l="ru">Две равные команды играют до 4 побед. Игры независимы, p = 1/2. Сколько игр в среднем?</span><span data-l="en">Two evenly matched teams play until one has 4 wins. Games are independent, p = 1/2. How many games are played on average?</span><span data-l="kk">Күштері тең екі команда біреуі 4 жеңіске жеткенше ойнайды. Ойындар тәуелсіз, p = 1/2. Орта есеппен неше ойын болады?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Серия кончается на игре k, если победитель выиграл k-ю игру и ровно 3 из первых k − 1. Победителем может быть любая команда, поэтому множитель 2.</span><span data-l="en">The series ends at game k if the winner wins game k and exactly 3 of the first k − 1. Either team can be the winner, hence the factor 2.</span><span data-l="kk">Серия k-ойында аяқталады, егер жеңімпаз k-ойынды және алғашқы k − 1 ойынның дәл 3-еуін ұтса. Жеңімпаз кез келген команда бола алады, сондықтан 2 көбейткіші.</span></p>
+    \[P(k)=2\binom{k-1}{3}\left(\tfrac12\right)^k:\quad P(4)=\tfrac18,\ P(5)=\tfrac14,\ P(6)=\tfrac5{16},\ P(7)=\tfrac5{16}\]
+    \[E=4\cdot\tfrac18+5\cdot\tfrac14+6\cdot\tfrac5{16}+7\cdot\tfrac5{16}=\tfrac{93}{16}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">93/16 ≈ 5,81 игры.</span><span data-l="en">93/16 ≈ 5.81 games.</span><span data-l="kk">93/16 ≈ 5,81 ойын.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">последнюю игру всегда выигрывает чемпион, поэтому берём \(\binom{k-1}{3}\), а не \(\binom{k}{4}\).</span><span data-l="en">the last game is always won by the champion, so we use \(\binom{k-1}{3}\), not \(\binom{k}{4}\).</span><span data-l="kk">соңғы ойынды әрқашан чемпион ұтады, сондықтан \(\binom{k}{4}\) емес, \(\binom{k-1}{3}\) аламыз.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">писать \(\binom k4\) и забыть множитель 2. Проверка: сумма вероятностей = 1.</span><span data-l="en">writing \(\binom k4\) and forgetting the factor 2. Check: the probabilities must add up to 1.</span><span data-l="kk">\(\binom k4\) жазып, 2 көбейткішін ұмыту. Тексер: ықтималдықтардың қосындысы 1.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t24">
+  <div class="thead"><span class="tid">3.5.24</span><h3><span data-l="ru">Урна: бесконечное матожидание</span><span data-l="en">Urn with infinite expectation</span><span data-l="kk">Урна: шексіз математикалық үміт</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F3">F3</a> <a class="flink" href="#F11">F11</a></span></div>
+  <p class="cond"><span data-l="ru">В урне 1 белый и 1 чёрный чип. Белый — игра окончена. Чёрный — возвращаем его и добавляем ещё один чёрный. Покажи, что ожидаемое число извлечений бесконечно.</span><span data-l="en">An urn has 1 white and 1 black chip. White ends the game. Black: put it back and add one more black chip. Show that the expected number of draws is infinite.</span><span data-l="kk">Урнада 1 ақ және 1 қара чип бар. Ақ чип шықса, ойын аяқталады. Қара шықса, оны қайтарып, тағы бір қара чип қосамыз. Алулардың күтілетін саны шексіз екенін көрсет.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Перед j-м извлечением в урне 1 белый и j чёрных. Вероятность чёрного \(\tfrac{j}{j+1}\).</span><span data-l="en">Before draw j the urn holds 1 white and j black chips. The probability of black is \(\tfrac{j}{j+1}\).</span><span data-l="kk">j-алу алдында урнада 1 ақ және j қара чип бар. Қараның ықтималдығы \(\tfrac{j}{j+1}\).</span></p>
+    \[P(X=k)=\underbrace{\tfrac12\cdot\tfrac23\cdots\tfrac{k-1}{k}}_{=1/k}\cdot\tfrac1{k+1}=\frac1{k(k+1)}\]
+    \[E(X)=\sum_{k=1}^\infty\frac{k}{k(k+1)}=\sum_{k=1}^\infty\frac1{k+1}=\infty\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">E(X) = ∞. При этом игра всё равно заканчивается с вероятностью 1.</span><span data-l="en">E(X) = ∞. Still, the game ends with probability 1.</span><span data-l="kk">E(X) = ∞. Соған қарамастан ойын 1 ықтималдықпен аяқталады.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">произведение «телескопически» сокращается до 1/k. Остаётся гармонический ряд, а он расходится.</span><span data-l="en">the product telescopes to 1/k. What remains is the harmonic series, which diverges.</span><span data-l="kk">көбейтінді қысқарып, 1/k қалады. Гармоникалық қатар шығады, ал ол жинақталмайды.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">думать «E бесконечно, значит игра может не кончиться». \(\sum\frac1{k(k+1)}=1\), белый будет извлечён.</span><span data-l="en">thinking “E is infinite, so the game may never end”. \(\sum\frac1{k(k+1)}=1\), so white will be drawn.</span><span data-l="kk">«E шексіз, демек ойын бітпеуі мүмкін» деп ойлау. \(\sum\frac1{k(k+1)}=1\), ақ чип міндетті түрде шығады.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t25">
+  <div class="thead"><span class="tid">3.5.25</span><h3><span data-l="ru">Доказать E = rn/(r+w)</span><span data-l="en">Prove E = rn/(r+w)</span><span data-l="kk">E = rn/(r+w) дәлелдеу</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F5">F5</a></span></div>
+  <p class="cond"><span data-l="ru">Выборка объёма n без возвращения из r красных и w белых. Докажи \(E(X)=\tfrac{rn}{r+w}\) приёмом из теоремы 3.5.1.</span><span data-l="en">A sample of size n is drawn without replacement from r red and w white chips. Prove \(E(X)=\tfrac{rn}{r+w}\) using the summation technique of Theorem 3.5.1.</span><span data-l="kk">r қызыл және w ақ чиптен көлемі n таңдама қайтарусыз алынады. 3.5.1-теоремадағы тәсілмен \(E(X)=\tfrac{rn}{r+w}\) екенін дәлелде.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Шаг 1. Тождество: \(k\binom rk=r\binom{r-1}{k-1}\).</span><span data-l="en">Step 1. Identity: \(k\binom rk=r\binom{r-1}{k-1}\).</span><span data-l="kk">1-қадам. Тепе-теңдік: \(k\binom rk=r\binom{r-1}{k-1}\).</span></p>
+    \[E(X)=\sum_k k\frac{\binom rk\binom w{n-k}}{\binom{r+w}n}=\frac{r}{\binom{r+w}n}\sum_k\binom{r-1}{k-1}\binom w{n-k}\]
+    <p><span data-l="ru">Шаг 2. Тождество Вандермонда: сумма равна \(\binom{r+w-1}{n-1}\) (выбор n−1 из r−1+w).</span><span data-l="en">Step 2. Vandermonde's identity: the sum equals \(\binom{r+w-1}{n-1}\) (choose n−1 out of r−1+w).</span><span data-l="kk">2-қадам. Вандермонд тепе-теңдігі: қосынды \(\binom{r+w-1}{n-1}\)-ге тең (r−1+w-дан n−1 таңдау).</span></p>
+    <p><span data-l="ru">Шаг 3. \(\binom{r+w}{n}=\frac{r+w}{n}\binom{r+w-1}{n-1}\). Подставляем:</span><span data-l="en">Step 3. \(\binom{r+w}{n}=\frac{r+w}{n}\binom{r+w-1}{n-1}\). Substitute:</span><span data-l="kk">3-қадам. \(\binom{r+w}{n}=\frac{r+w}{n}\binom{r+w-1}{n-1}\). Орнына қоямыз:</span></p>
+    \[E(X)=r\cdot\frac{n}{r+w}=\frac{rn}{r+w}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">доказано.</span><span data-l="en">proved.</span><span data-l="kk">дәлелденді.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">тот же приём, что для бинома: вынести константу и оставить сумму, равную числу сочетаний (или 1).</span><span data-l="en">the same trick as for the binomial: pull out a constant and leave a sum equal to a number of combinations (or to 1).</span><span data-l="kk">биномдағы тәсіл: тұрақтыны сыртқа шығарып, терулер санына (немесе 1-ге) тең қосындыны қалдыру.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">потерять сдвиг индексов. После j = k − 1 слагаемые: \(\binom{r-1}{j}\binom{w}{n-1-j}\).</span><span data-l="en">losing the index shift. After j = k − 1 the terms are \(\binom{r-1}{j}\binom{w}{n-1-j}\).</span><span data-l="kk">индекс ығысуын жоғалту. j = k − 1-ден кейін мүшелер: \(\binom{r-1}{j}\binom{w}{n-1-j}\).</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t26">
+  <div class="thead"><span class="tid">3.5.26</span><h3><span data-l="ru">Формула через «хвосты»</span><span data-l="en">Tail-sum formula</span><span data-l="kk">«Құйрықтар» арқылы формула</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F13">F13</a></span></div>
+  <p class="cond"><span data-l="ru">X — неотрицательная целочисленная случайная величина. Докажи \(E(X)=\sum_{k=1}^\infty P(X\ge k)\).</span><span data-l="en">X is a nonnegative integer-valued random variable. Prove \(E(X)=\sum_{k=1}^\infty P(X\ge k)\).</span><span data-l="kk">X — теріс емес бүтін мәнді кездейсоқ шама. \(E(X)=\sum_{k=1}^\infty P(X\ge k)\) екенін дәлелде.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[\sum_{k=1}^\infty P(X\ge k)=\sum_{k=1}^\infty\sum_{j=k}^\infty p(j)=\sum_{j=1}^\infty p(j)\sum_{k=1}^{j}1=\sum_{j=1}^\infty j\,p(j)=E(X)\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">доказано: меняем порядок суммирования.</span><span data-l="en">proved: swap the order of summation.</span><span data-l="kk">дәлелденді: қосу ретін ауыстырамыз.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">значение j входит в события X ≥ 1, X ≥ 2, …, X ≥ j. Значит, p(j) посчитано ровно j раз.</span><span data-l="en">the value j belongs to the events X ≥ 1, X ≥ 2, …, X ≥ j. So p(j) is counted exactly j times.</span><span data-l="kk">j мәні X ≥ 1, X ≥ 2, …, X ≥ j оқиғаларының бәріне кіреді. Сондықтан p(j) дәл j рет саналады.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">начинать с k = 0. Тогда добавится лишняя единица P(X ≥ 0) = 1.</span><span data-l="en">starting at k = 0. That adds an extra P(X ≥ 0) = 1.</span><span data-l="kk">k = 0-ден бастау. Сонда артық P(X ≥ 0) = 1 қосылады.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t27">
+  <div class="thead"><span class="tid">3.5.27</span><h3><span data-l="ru">Медианы</span><span data-l="en">Medians</span><span data-l="kk">Медианалар</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F8">F8</a></span></div>
+  <p class="cond"><span data-l="ru">Найди медиану: (a) \(f(y)=(\theta+1)y^\theta,\ 0\le y\le1,\ \theta\gt0\); (b) \(f(y)=y+\tfrac12,\ 0\le y\le1\).</span><span data-l="en">Find the median: (a) \(f(y)=(\theta+1)y^\theta,\ 0\le y\le1,\ \theta\gt0\); (b) \(f(y)=y+\tfrac12,\ 0\le y\le1\).</span><span data-l="kk">Медиананы тап: (a) \(f(y)=(\theta+1)y^\theta,\ 0\le y\le1,\ \theta\gt0\); (b) \(f(y)=y+\tfrac12,\ 0\le y\le1\).</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[\text{(a)}\ \int_0^m(\theta+1)y^\theta dy=m^{\theta+1}=\tfrac12\ \Rightarrow\ m=\left(\tfrac12\right)^{1/(\theta+1)}\]
+    <div data-l="ru kk">\[\text{(b)}\ \int_0^m\left(y+\tfrac12\right)dy=\tfrac{m^2}2+\tfrac m2=\tfrac12\ \Rightarrow\ m^2+m-1=0\ \Rightarrow\ m=\tfrac{\sqrt5-1}{2}\approx0{,}618\]</div><div data-l="en">\[\text{(b)}\ \int_0^m\left(y+\tfrac12\right)dy=\tfrac{m^2}2+\tfrac m2=\tfrac12\ \Rightarrow\ m^2+m-1=0\ \Rightarrow\ m=\tfrac{\sqrt5-1}{2}\approx0.618\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">(a) \(2^{-1/(\theta+1)}\); (b) ≈ 0,618.</span><span data-l="en">(a) \(2^{-1/(\theta+1)}\); (b) ≈ 0.618.</span><span data-l="kk">(a) \(2^{-1/(\theta+1)}\); (b) ≈ 0,618.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">медиана — корень уравнения F(m) = 1/2. В (b) второй корень отрицательный, он вне [0,1].</span><span data-l="en">the median is the root of F(m) = 1/2. In (b) the other root is negative, outside [0,1].</span><span data-l="kk">медиана — F(m) = 1/2 теңдеуінің түбірі. (b)-да екінші түбір теріс, ол [0,1]-ден тыс.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">искать медиану как E(Y) или как середину отрезка 0,5.</span><span data-l="en">taking the median to be E(Y) or the midpoint 0.5.</span><span data-l="kk">медиананы E(Y) немесе кесіндінің ортасы 0,5 деп алу.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t28">
+  <div class="thead"><span class="tid">3.5.28</span><h3>E(3X − 4)</h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F4">F4</a> <a class="flink" href="#F7">F7</a></span></div>
+  <p class="cond"><span data-l="ru">X — биномиальная, n = 10, p = 2/5. Найди E(3X − 4).</span><span data-l="en">X is binomial with n = 10, p = 2/5. Find E(3X − 4).</span><span data-l="kk">X — биномдық шама, n = 10, p = 2/5. E(3X − 4)-ті тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[E(X)=10\cdot\tfrac25=4,\qquad E(3X-4)=3\cdot4-4=8\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> 8.</p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">сдвиг и растяжение переносятся на среднее без изменений.</span><span data-l="en">shifting and scaling carry over to the mean unchanged.</span><span data-l="kk">ығысу мен созылу орташаға сол күйінде көшеді.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">писать E(3X−4) = 3E(X) и забыть −4. Константа остаётся сама собой.</span><span data-l="en">writing E(3X−4) = 3E(X) and forgetting the −4. A constant stays as it is.</span><span data-l="kk">E(3X−4) = 3E(X) деп жазып, −4-ті ұмыту. Тұрақты өзгеріссіз қалады.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t29">
+  <div class="thead"><span class="tid">3.5.29</span><h3><span data-l="ru">Стоимость доработки</span><span data-l="en">Rework cost</span><span data-l="kk">Қайта өңдеу құны</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F4">F4</a> <a class="flink" href="#F7">F7</a></span></div>
+  <p class="cond"><span data-l="ru">В день делают 12 деталей. Каждая требует доработки с вероятностью 0,11. Доработка стоит $100. Каковы средние дневные затраты?</span><span data-l="en">12 components are made per day. Each needs rework with probability 0.11. Rework costs $100. What is the average daily cost?</span><span data-l="kk">Күніне 12 бөлшек жасалады. Әрқайсысы 0,11 ықтималдықпен қайта өңдеуді қажет етеді. Қайта өңдеу $100 тұрады. Орташа күндік шығын қанша?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div data-l="ru kk">\[E(100X)=100\cdot12\cdot0{,}11=132\]</div><div data-l="en">\[E(100X)=100\cdot12\cdot0.11=132\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">$132 в день.</span><span data-l="en">$132 per day.</span><span data-l="kk">күніне $132.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">X ~ Bin(12; 0,11), затраты = 100X.</span><span data-l="en">X ~ Bin(12, 0.11), cost = 100X.</span><span data-l="kk">X ~ Bin(12; 0,11), шығын = 100X.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">строить таблицу на 13 значений. Линейность решает в одну строку.</span><span data-l="en">building a 13-row table. Linearity solves it in one line.</span><span data-l="kk">13 жолдық кесте құру. Сызықтылық бір жолда шешеді.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t30">
+  <div class="thead"><span class="tid">3.5.30</span><h3><span data-l="ru">E(W) двумя способами</span><span data-l="en">E(W) in two ways</span><span data-l="kk">E(W) екі тәсілмен</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F2">F2</a> <a class="flink" href="#F6">F6</a></span></div>
+  <p class="cond"><span data-l="ru">\(f_Y(y)=2(1-y),\ 0\le y\le1\). \(W=Y^2\), её плотность \(f_W(w)=\tfrac1{\sqrt w}-1\). Найди E(W) двумя способами.</span><span data-l="en">\(f_Y(y)=2(1-y),\ 0\le y\le1\). \(W=Y^2\), with pdf \(f_W(w)=\tfrac1{\sqrt w}-1\). Find E(W) in two ways.</span><span data-l="kk">\(f_Y(y)=2(1-y),\ 0\le y\le1\). \(W=Y^2\), оның тығыздығы \(f_W(w)=\tfrac1{\sqrt w}-1\). E(W)-ті екі тәсілмен тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[(1)\ \int_0^1w\left(\tfrac1{\sqrt w}-1\right)dw=\int_0^1(\sqrt w-w)\,dw=\tfrac23-\tfrac12=\tfrac16\]
+    \[(2)\ \int_0^1y^2\cdot2(1-y)\,dy=2\left(\tfrac13-\tfrac14\right)=\tfrac16\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> 1/6.</p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">теорема 3.5.3 гарантирует, что оба пути дают одно число. Второй путь не требует плотности W.</span><span data-l="en">Theorem 3.5.3 guarantees both ways give the same number. The second way does not need the pdf of W.</span><span data-l="kk">3.5.3-теорема екі тәсілдің бірдей сан беретініне кепілдік береді. Екінші тәсілге W-ның тығыздығы қажет емес.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">во втором способе интегрировать y²·f_W. Функцию g(y) умножают на плотность Y.</span><span data-l="en">in way (2) integrating y²·f_W. The function g(y) is multiplied by the pdf of Y.</span><span data-l="kk">екінші тәсілде y²·f_W интегралдау. g(y) функциясы Y-тің тығыздығына көбейтіледі.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t31">
+  <div class="thead"><span class="tid">3.5.31</span><h3><span data-l="ru">Прибыль от спроса</span><span data-l="en">Profit from demand</span><span data-l="kk">Сұраныстан түсетін пайда</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F6">F6</a></span></div>
+  <p class="cond"><span data-l="ru">Прибыль (сотни тысяч $): \(Q(y)=2(1-e^{-2y})\), спрос \(f_Y(y)=6e^{-6y},\ y\gt0\). Найди ожидаемую прибыль.</span><span data-l="en">Profit (hundreds of thousands of $): \(Q(y)=2(1-e^{-2y})\); demand pdf \(f_Y(y)=6e^{-6y},\ y\gt0\). Find the expected profit.</span><span data-l="kk">Пайда (жүз мыңдаған $): \(Q(y)=2(1-e^{-2y})\); сұраныс тығыздығы \(f_Y(y)=6e^{-6y},\ y\gt0\). Күтілетін пайданы тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[E[Q]=\int_0^\infty2(1-e^{-2y})6e^{-6y}dy=2\int_0^\infty6e^{-6y}dy-12\int_0^\infty e^{-8y}dy=2-\tfrac{12}8=\tfrac12\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">0,5 сотни тысяч = $50 000.</span><span data-l="en">0.5 hundred thousand = $50,000.</span><span data-l="kk">0,5 жүз мың = $50 000.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">первый интеграл — площадь под плотностью, он равен 1. Второй — простая экспонента.</span><span data-l="en">the first integral is the area under the pdf, equal to 1. The second is a simple exponential.</span><span data-l="kk">бірінші интеграл — тығыздық астындағы аудан, ол 1-ге тең. Екіншісі — қарапайым экспонента.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">подставить E(Y) = 1/6 в Q: \(Q(1/6)\ne E[Q(Y)]\) для нелинейной Q.</span><span data-l="en">plugging E(Y) = 1/6 into Q: \(Q(1/6)\ne E[Q(Y)]\) for a nonlinear Q.</span><span data-l="kk">E(Y) = 1/6-ны Q-ға қою: сызықтық емес Q үшін \(Q(1/6)\ne E[Q(Y)]\).</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t32">
+  <div class="thead"><span class="tid">3.5.32</span><h3><span data-l="ru">Объём коробки</span><span data-l="en">Box volume</span><span data-l="kk">Қораптың көлемі</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F6">F6</a></span></div>
+  <p class="cond"><span data-l="ru">Высота коробки 5, основание Y × Y, \(f_Y(y)=6y(1-y),\ 0\lt y\lt1\). Найди средний объём.</span><span data-l="en">A box has height 5 and a Y × Y base, \(f_Y(y)=6y(1-y),\ 0\lt y\lt1\). Find the expected volume.</span><span data-l="kk">Қораптың биіктігі 5, табаны Y × Y, \(f_Y(y)=6y(1-y),\ 0\lt y\lt1\). Күтілетін көлемді тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <div data-l="ru kk">\[E(5Y^2)=5\int_0^16y^3(1-y)\,dy=5\cdot6\left(\tfrac14-\tfrac15\right)=5\cdot\tfrac3{10}=1{,}5\]</div><div data-l="en">\[E(5Y^2)=5\int_0^16y^3(1-y)\,dy=5\cdot6\left(\tfrac14-\tfrac15\right)=5\cdot\tfrac3{10}=1.5\]</div>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">1,5 куб. дюйма.</span><span data-l="en">1.5 cubic inches.</span><span data-l="kk">1,5 текше дюйм.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">объём V = 5Y² — функция от Y, поэтому <a href="#F6">F6</a>.</span><span data-l="en">the volume V = 5Y² is a function of Y, so use <a href="#F6">F6</a>.</span><span data-l="kk">V = 5Y² көлемі — Y-тің функциясы, сондықтан <a href="#F6">F6</a>.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">взять 5·(E Y)² = 5·0,25 = 1,25. Квадрат среднего ≠ среднее квадрата.</span><span data-l="en">taking 5·(E Y)² = 5·0.25 = 1.25. The square of the mean ≠ the mean of the square.</span><span data-l="kk">5·(E Y)² = 5·0,25 = 1,25 деп алу. Орташаның квадраты ≠ квадраттың орташасы.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t33">
+  <div class="thead"><span class="tid">3.5.33</span><h3><span data-l="ru">Подтянуть оценки</span><span data-l="en">Curving the grades</span><span data-l="kk">Бағаларды көтеру</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F2">F2</a> <a class="flink" href="#F6">F6</a></span></div>
+  <p class="cond"><span data-l="ru">Оценки: \(f_Y(y)=\tfrac1{5000}(100-y),\ 0\le y\le100\). Новая оценка \(g(Y)=10\sqrt Y\). Станет ли средний балл выше 60?</span><span data-l="en">Grades have pdf \(f_Y(y)=\tfrac1{5000}(100-y),\ 0\le y\le100\). The new grade is \(g(Y)=10\sqrt Y\). Will the class average rise above 60?</span><span data-l="kk">Бағалардың тығыздығы \(f_Y(y)=\tfrac1{5000}(100-y),\ 0\le y\le100\). Жаңа баға \(g(Y)=10\sqrt Y\). Сыныптың орташа бағасы 60-тан асады ма?</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[E(10\sqrt Y)=\frac{10}{5000}\int_0^{100}\left(100y^{1/2}-y^{3/2}\right)dy=\frac{10}{5000}\left(\tfrac{200000}{3}-40000\right)=\tfrac{160}{3}\]
+    <p><span data-l="ru">Для сравнения: старое среднее \(E(Y)=\tfrac{100}{3}\approx33{,}3\).</span><span data-l="en">For comparison: the old mean is \(E(Y)=\tfrac{100}{3}\approx33.3\).</span><span data-l="kk">Салыстыру үшін: бұрынғы орташа \(E(Y)=\tfrac{100}{3}\approx33{,}3\).</span></p>
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">≈ 53,3 &lt; 60. Стратегия не сработает.</span><span data-l="en">≈ 53.3 &lt; 60. The strategy will not work.</span><span data-l="kk">≈ 53,3 &lt; 60. Стратегия нәтиже бермейді.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">большинство оценок низкие, а корень поднимает их не так сильно, как кажется.</span><span data-l="en">most grades are low, and the square root does not raise them as much as it seems.</span><span data-l="kk">бағалардың көбі төмен, ал түбір оларды көрінгендей көп көтермейді.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">посчитать \(10\sqrt{E(Y)}=10\sqrt{33{,}3}\approx57{,}7\). Тоже меньше 60, но число неверное.</span><span data-l="en">computing \(10\sqrt{E(Y)}=10\sqrt{33.3}\approx57.7\). Also below 60, but the number is wrong.</span><span data-l="kk">\(10\sqrt{E(Y)}=10\sqrt{33{,}3}\approx57{,}7\) деп есептеу. Бұл да 60-тан кем, бірақ сан қате.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t34">
+  <div class="thead"><span class="tid">3.5.34</span><h3><span data-l="ru">Квадрат отклонения</span><span data-l="en">Squared deviation</span><span data-l="kk">Ауытқудың квадраты</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F6">F6</a></span></div>
+  <p class="cond"><span data-l="ru">\(f_Y(y)=2y,\ 0\le y\le1\), \(E(Y)=2/3\). \(W=(Y-\tfrac23)^2\). Найди E(W).</span><span data-l="en">\(f_Y(y)=2y,\ 0\le y\le1\), \(E(Y)=2/3\). \(W=(Y-\tfrac23)^2\). Find E(W).</span><span data-l="kk">\(f_Y(y)=2y,\ 0\le y\le1\), \(E(Y)=2/3\). \(W=(Y-\tfrac23)^2\). E(W)-ті тап.</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[E(W)=E(Y^2)-\tfrac43E(Y)+\tfrac49=\int_0^12y^3dy-\tfrac49=\tfrac12-\tfrac49=\tfrac1{18}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">1/18 ≈ 0,056.</span><span data-l="en">1/18 ≈ 0.056.</span><span data-l="kk">1/18 ≈ 0,056.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">это дисперсия — тема следующего раздела 3.6. Раскрой квадрат и используй линейность.</span><span data-l="en">this is the variance, the topic of Section 3.6. Expand the square and use linearity.</span><span data-l="kk">бұл — дисперсия, 3.6-бөлімнің тақырыбы. Квадратты ашып, сызықтылықты қолдан.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">ответить 0, «потому что среднее отклонение равно нулю». Нулю равно E(Y − μ), а не его квадрат.</span><span data-l="en">answering 0 “because the average deviation is zero”. E(Y − μ) is zero, not its square.</span><span data-l="kk">«орташа ауытқу нөлге тең» деп 0 жауап беру. E(Y − μ) нөлге тең, оның квадраты емес.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t35">
+  <div class="thead"><span class="tid">3.5.35</span><h3><span data-l="ru">Площадь треугольника</span><span data-l="en">Triangle area</span><span data-l="kk">Үшбұрыштың ауданы</span></h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F6">F6</a> <a class="flink" href="#F10">F10</a></span></div>
+  <p class="cond"><span data-l="ru">Равнобедренный прямоугольный треугольник, гипотенуза Y равномерно распределена на [6, 10]. Найди среднюю площадь (через Y, а не через катет a).</span><span data-l="en">An isosceles right triangle; its hypotenuse Y is uniformly distributed on [6, 10]. Find the expected area (in terms of Y, not of the leg a).</span><span data-l="kk">Тең бүйірлі тікбұрышты үшбұрыш; гипотенузасы Y [6, 10] аралығында бірқалыпты үлестірілген. Күтілетін ауданды тап (a катеті арқылы емес, Y арқылы).</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    <p><span data-l="ru">Катет \(a=Y/\sqrt2\), площадь \(a^2/2=Y^2/4\).</span><span data-l="en">Leg \(a=Y/\sqrt2\), area \(a^2/2=Y^2/4\).</span><span data-l="kk">Катет \(a=Y/\sqrt2\), аудан \(a^2/2=Y^2/4\).</span></p>
+    \[E\left(\tfrac{Y^2}{4}\right)=\tfrac14\cdot\tfrac14\int_6^{10}y^2dy=\tfrac1{16}\cdot\tfrac{1000-216}{3}=\tfrac{784}{48}=\tfrac{49}{3}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> <span data-l="ru">49/3 ≈ 16,33.</span><span data-l="en">49/3 ≈ 16.33.</span><span data-l="kk">49/3 ≈ 16,33.</span></p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">площадь — функция от Y, равномерная плотность равна 1/4.</span><span data-l="en">the area is a function of Y, and the uniform density is 1/4.</span><span data-l="kk">аудан — Y-тің функциясы, бірқалыпты тығыздық 1/4-ке тең.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">взять (E Y)²/4 = 64/4 = 16. Близко, но неверно.</span><span data-l="en">taking (E Y)²/4 = 64/4 = 16. Close, but wrong.</span><span data-l="kk">(E Y)²/4 = 64/4 = 16 деп алу. Жақын, бірақ қате.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+
+<article class="task" id="t36">
+  <div class="thead"><span class="tid">3.5.36</span><h3>E(1/X)</h3><span class="uses"><span data-l="ru">формулы:</span><span data-l="en">formulas:</span><span data-l="kk">формулалар:</span> <a class="flink" href="#F6">F6</a></span></div>
+  <p class="cond"><span data-l="ru">n чипов с номерами 1…n. Вероятность вытянуть чип i равна k·i. Найди E(1/X). Подсказка: \(1+\dots+n=n(n+1)/2\).</span><span data-l="en">n chips numbered 1…n. The probability of drawing chip i is k·i. Find E(1/X). Hint: \(1+\dots+n=n(n+1)/2\).</span><span data-l="kk">1…n нөмірлі n чип. i чипін алу ықтималдығы k·i. E(1/X)-ті тап. Кеңес: \(1+\dots+n=n(n+1)/2\).</span></p>
+  <details><summary><span data-l="ru">Решение</span><span data-l="en">Solution</span><span data-l="kk">Шешімі</span></summary><div class="sol">
+    \[\sum_{i=1}^nki=1\ \Rightarrow\ k=\frac{2}{n(n+1)}\]
+    \[E\left(\tfrac1X\right)=\sum_{i=1}^n\tfrac1i\cdot ki=kn=\frac{2}{n+1}\]
+    <p class="ans"><span data-l="ru">Ответ:</span><span data-l="en">Answer:</span><span data-l="kk">Жауабы:</span> 2/(n+1).</p>
+    <p class="why"><span data-l="ru">Почему так:</span><span data-l="en">Why:</span><span data-l="kk">Неге олай:</span> <span data-l="ru">1/i и i сокращаются, остаётся сумма n одинаковых k.</span><span data-l="en">1/i and i cancel; what is left is a sum of n equal terms k.</span><span data-l="kk">1/i мен i қысқарады, n бірдей k-ның қосындысы қалады.</span></p>
+    <p class="trap"><b><span data-l="ru">Ловушка:</span><span data-l="en">Trap:</span><span data-l="kk">Тұзақ:</span></b> <span data-l="ru">забыть найти k из условия «сумма вероятностей = 1».</span><span data-l="en">forgetting to find k from “the probabilities add up to 1”.</span><span data-l="kk">k-ны «ықтималдықтардың қосындысы = 1» шартынан табуды ұмыту.</span></p>
+  </div></details>
+  <a class="back" href="#tasks"><span data-l="ru">↑ к списку задач</span><span data-l="en">↑ back to problems</span><span data-l="kk">↑ есептер тізіміне</span></a>
+</article>
+</section>
+
+<section id="cheat">
+  <span class="eyebrow"><span data-l="ru">Шпора</span><span data-l="en">Cheat sheet</span><span data-l="kk">Шпаргалка</span></span>
+  <h2><span data-l="ru">Узнай тип задачи за 10 секунд</span><span data-l="en">Identify the problem type in 10 seconds</span><span data-l="kk">Есептің түрін 10 секундта анықта</span></h2>
+  <div class="panel"><div class="tbl-wrap"><table class="cheat">
+    <thead><tr><th><span data-l="ru">Признак в условии</span><span data-l="en">Signal in the problem</span><span data-l="kk">Шарттағы белгі</span></th><th><span data-l="ru">Формула</span><span data-l="en">Formula</span><span data-l="kk">Формула</span></th><th><span data-l="ru">Задачи</span><span data-l="en">Problems</span><span data-l="kk">Есептер</span></th></tr></thead>
+    <tbody>
+      <tr><td><span data-l="ru">Таблица «значение — вероятность», выигрыши</span><span data-l="en">A “value — probability” table, payoffs</span><span data-l="kk">«Мән — ықтималдық» кестесі, ұтыстар</span></td><td>\(\sum k\,p(k)\) · <a href="#F1">F1</a></td><td><a href="#t1">.1</a> <a href="#t2">.2</a> <a href="#t4">.4</a> <a href="#t17">.17</a> <a href="#t18">.18</a> <a href="#t21">.21</a> <a href="#t23">.23</a></td></tr>
+      <tr><td><span data-l="ru">Дана плотность f(y)</span><span data-l="en">A pdf f(y) is given</span><span data-l="kk">f(y) тығыздығы берілген</span></td><td>\(\int y f(y)dy\) · <a href="#F2">F2</a></td><td><a href="#t8">.8</a> <a href="#t9">.9</a> <a href="#t10">.10</a> <a href="#t11">.11</a></td></tr>
+      <tr><td><span data-l="ru">n независимых испытаний, доля p</span><span data-l="en">n independent trials, proportion p</span><span data-l="kk">n тәуелсіз сынақ, үлес p</span></td><td>\(np\) · <a href="#F4">F4</a></td><td><a href="#t7">.7</a> <a href="#t13">.13</a> <a href="#t14">.14</a> <a href="#t15">.15</a> <a href="#t16">.16</a> <a href="#t29">.29</a></td></tr>
+      <tr><td><span data-l="ru">Урна, «без возвращения», r из N</span><span data-l="en">Urn, “without replacement”, r out of N</span><span data-l="kk">Урна, «қайтарусыз», N-нен r</span></td><td>\(nr/(r+w)\) · <a href="#F5">F5</a></td><td><a href="#t6">.6</a> <a href="#t25">.25</a></td></tr>
+      <tr><td><span data-l="ru">Спрашивают площадь, объём, прибыль, X², 1/X</span><span data-l="en">Asked for an area, volume, profit, X², 1/X</span><span data-l="kk">Аудан, көлем, пайда, X², 1/X сұралады</span></td><td>\(\int g(y)f(y)dy\) · <a href="#F6">F6</a></td><td><a href="#t20">.20</a> <a href="#t22">.22</a> <a href="#t30">.30</a>–<a href="#t36">.36</a></td></tr>
+      <tr><td><span data-l="ru">aX + b, сумма по годам</span><span data-l="en">aX + b, a sum over years</span><span data-l="kk">aX + b, жылдар бойынша қосынды</span></td><td>\(aE(X)+b\) · <a href="#F7">F7</a></td><td><a href="#t5">.5</a> <a href="#t28">.28</a> <a href="#t29">.29</a></td></tr>
+      <tr><td><span data-l="ru">«Медиана», «50%»</span><span data-l="en">“Median”, “50%”</span><span data-l="kk">«Медиана», «50%»</span></td><td>\(F(m)=\tfrac12\) · <a href="#F8">F8</a></td><td><a href="#t27">.27</a></td></tr>
+      <tr><td><span data-l="ru">«Покажи, что E не существует»</span><span data-l="en">“Show that E does not exist”</span><span data-l="kk">«E жоқ екенін көрсет»</span></td><td><span data-l="ru">ряд/интеграл → ∞</span><span data-l="en">series/integral → ∞</span><span data-l="kk">қатар/интеграл → ∞</span> · <a href="#F3">F3</a></td><td><a href="#t12">.12</a> <a href="#t24">.24</a></td></tr>
+      <tr><td><span data-l="ru">Удваивающиеся выплаты, \(2^k\), \(c^k\)</span><span data-l="en">Doubling payoffs, \(2^k\), \(c^k\)</span><span data-l="kk">Екі еселенетін төлемдер, \(2^k\), \(c^k\)</span></td><td><span data-l="ru">геом. ряд</span><span data-l="en">geometric series</span><span data-l="kk">геом. қатар</span> · <a href="#F11">F11</a></td><td><a href="#t19">.19</a> <a href="#t20">.20</a></td></tr>
+      <tr><td><span data-l="ru">\(y^n e^{-ay}\) под интегралом</span><span data-l="en">\(y^n e^{-ay}\) inside the integral</span><span data-l="kk">Интеграл астында \(y^n e^{-ay}\)</span></td><td>\(n!/a^{n+1}\) · <a href="#F12">F12</a></td><td><a href="#t8">.8b</a> <a href="#t31">.31</a></td></tr>
+    </tbody></table></div></div>
+  <div class="panel">
+    <h3><span data-l="ru">Готовые числа</span><span data-l="en">Ready-made numbers</span><span data-l="kk">Дайын сандар</span></h3>
+    <div class="tbl-wrap"><table class="cheat"><tbody>
+      <tr><td><span data-l="ru">Равномерное [a,b]</span><span data-l="en">Uniform [a,b]</span><span data-l="kk">Бірқалыпты [a,b]</span></td><td>E = (a+b)/2</td></tr>
+      <tr><td><span data-l="ru">Экспонента λ</span><span data-l="en">Exponential λ</span><span data-l="kk">Көрсеткіштік λ</span></td><td><span data-l="ru">E = 1/λ, медиана = ln2/λ</span><span data-l="en">E = 1/λ, median = ln2/λ</span><span data-l="kk">E = 1/λ, медиана = ln2/λ</span></td></tr>
+      <tr><td><span data-l="ru">Рэлей</span><span data-l="en">Rayleigh</span><span data-l="kk">Рэлей</span></td><td>E = a√(π/2)</td></tr>
+      <tr><td>\(\sum_{k\ge1}k/2^k\)</td><td>2</td></tr>
+      <tr><td>\(\sum_{k\ge n}2^{-k}\)</td><td>\(2^{-(n-1)}\)</td></tr>
+      <tr><td>\(\int_0^\infty y^n e^{-ay}dy\)</td><td>\(n!/a^{n+1}\)</td></tr>
+      <tr><td><span data-l="ru">Рулетка: Вегас / Монте-Карло</span><span data-l="en">Roulette: Vegas / Monte Carlo</span><span data-l="kk">Рулетка: Вегас / Монте-Карло</span></td><td>−1/19 / −1/37</td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<section id="errors">
+  <span class="eyebrow"><span data-l="ru">Где ошибаются</span><span data-l="en">Where students go wrong</span><span data-l="kk">Қай жерде қателеседі</span></span>
+  <h2><span data-l="ru">Типичные ошибки студентов</span><span data-l="en">Common student mistakes</span><span data-l="kk">Студенттердің жиі қателері</span></h2>
+  <ol class="errs">
+    <li><div><span data-l="ru"><b>g(E X) вместо E[g(X)].</b> Считают площадь от среднего радиуса или квадрат среднего. Для нелинейной g это неверно.</span><span data-l="en"><b>g(E X) instead of E[g(X)].</b> Computing the area from the mean radius, or squaring the mean. For a nonlinear g this is wrong.</span><span data-l="kk"><b>E[g(X)] орнына g(E X).</b> Ауданды орташа радиус бойынша есептеу немесе орташаны квадраттау. Сызықтық емес g үшін бұл қате.</span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">g внутрь суммы или интеграла (<a href="#F6">F6</a>).</span><span data-l="en">put g inside the sum or integral (<a href="#F6">F6</a>).</span><span data-l="kk">g-ны қосындының немесе интегралдың ішіне қой (<a href="#F6">F6</a>).</span> <a href="#t31">.31</a> <a href="#t32">.32</a> <a href="#t33">.33</a> <a href="#t35">.35</a></div></li>
+    <li><div><span data-l="ru"><b>∫f(y)dy вместо ∫y·f(y)dy.</b> Получают 1 и удивляются.</span><span data-l="en"><b>∫f(y)dy instead of ∫y·f(y)dy.</b> You get 1 and are surprised.</span><span data-l="kk"><b>∫y·f(y)dy орнына ∫f(y)dy.</b> 1 шығып, таң қаласың.</span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">в интеграле всегда есть множитель y (или g(y)).</span><span data-l="en">the integral always has the factor y (or g(y)).</span><span data-l="kk">интегралда әрқашан y (немесе g(y)) көбейткіші болады.</span></div></li>
+    <li><div><span data-l="ru"><b>Не те пределы интегрирования.</b> Берут от −∞ до ∞, хотя f = 0 вне [a,b], или забывают кусочное задание.</span><span data-l="en"><b>Wrong limits of integration.</b> Integrating from −∞ to ∞ although f = 0 outside [a,b], or ignoring a piecewise definition.</span><span data-l="kk"><b>Интегралдау шектері қате.</b> [a,b]-дан тыс f = 0 болса да −∞-тен ∞-ке дейін интегралдау немесе бөлікті анықтаманы елемеу.</span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">интегрируй только там, где f ≠ 0, по кускам.</span><span data-l="en">integrate only where f ≠ 0, piece by piece.</span><span data-l="kk">тек f ≠ 0 жерде, бөлік-бөлікпен интегралда.</span> <a href="#t8">.8c</a></div></li>
+    <li><div><span data-l="ru"><b>Бином вместо урны (и наоборот).</b> «Без возвращения» → сочетания.</span><span data-l="en"><b>Binomial instead of urn (or vice versa).</b> “Without replacement” → combinations.</span><span data-l="kk"><b>Урнаның орнына бином (немесе керісінше).</b> «Қайтарусыз» → терулер.</span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">для среднего обе схемы дают np, но вероятности отдельных значений считаются по разным формулам.</span><span data-l="en">for the mean both give np, but the probabilities of individual values use different formulas.</span><span data-l="kk">орташа үшін екеуі де np береді, бірақ жеке мәндердің ықтималдықтары әртүрлі формуламен табылады.</span> <a href="#t4">.4</a></div></li>
+    <li><div><span data-l="ru"><b>Потеряна строка с отрицательным выигрышем.</b> Проигрыш ставки — тоже значение X.</span><span data-l="en"><b>Missing the row with a negative payoff.</b> Losing the bet is also a value of X.</span><span data-l="kk"><b>Теріс ұтысы бар жол ұмытылған.</b> Бәсті жоғалту да X-тің мәні.</span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">проверь, что сумма вероятностей = 1.</span><span data-l="en">check that the probabilities add up to 1.</span><span data-l="kk">ықтималдықтардың қосындысы 1 екенін тексер.</span> <a href="#t1">.1</a> <a href="#t5">.5</a></div></li>
+    <li><div><span data-l="ru"><b>E(XY) = E(X)·E(Y) для зависимых.</b></span><span data-l="en"><b>E(XY) = E(X)·E(Y) for dependent variables.</b></span><span data-l="kk"><b>Тәуелді шамалар үшін E(XY) = E(X)·E(Y).</b></span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">перемножать средние можно только для независимых. Иначе перебор.</span><span data-l="en">you may multiply the means only for independent variables; otherwise enumerate.</span><span data-l="kk">орташаларды тек тәуелсіз шамалар үшін көбейтуге болады; әйтпесе тізіп шық.</span> <a href="#t18">.18</a></div></li>
+    <li><div><span data-l="ru"><b>Забыть константу в E(aX+b).</b></span><span data-l="en"><b>Forgetting the constant in E(aX+b).</b></span><span data-l="kk"><b>E(aX+b)-дағы тұрақтыны ұмыту.</b></span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">b остаётся как есть.</span><span data-l="en">b stays as it is.</span><span data-l="kk">b өзгеріссіз қалады.</span> <a href="#t28">.28</a></div></li>
+    <li><div><span data-l="ru"><b>Не проверена сходимость.</b> Формально считают сумму и получают «число».</span><span data-l="en"><b>Convergence not checked.</b> Computing the sum formally and getting a “number”.</span><span data-l="kk"><b>Жинақтылық тексерілмеген.</b> Қосындыны формальды есептеп, «сан» алу.</span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">проверь \(\sum|k|p(k)\lt\infty\).</span><span data-l="en">check that \(\sum|k|p(k)\lt\infty\).</span><span data-l="kk">\(\sum|k|p(k)\lt\infty\) екенін тексер.</span> <a href="#t12">.12</a> <a href="#t24">.24</a></div></li>
+    <li><div><span data-l="ru"><b>Медиана = среднее.</b> Верно только для симметричных распределений.</span><span data-l="en"><b>Median = mean.</b> True only for symmetric distributions.</span><span data-l="kk"><b>Медиана = орташа.</b> Тек симметриялы үлестірімдер үшін дұрыс.</span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">решай F(m) = 1/2.</span><span data-l="en">solve F(m) = 1/2.</span><span data-l="kk">F(m) = 1/2 теңдеуін шеш.</span> <a href="#t27">.27</a></div></li>
+    <li><div><span data-l="ru"><b>Путают λ и μ в экспоненте.</b></span><span data-l="en"><b>Confusing λ and μ in the exponential.</b></span><span data-l="kk"><b>Көрсеткіштік үлестірімде λ мен μ-ді шатастыру.</b></span> <span class="fix"><span data-l="ru">Как правильно:</span><span data-l="en">Fix:</span><span data-l="kk">Дұрысы:</span></span> <span data-l="ru">смотри, что стоит перед e: \(\lambda e^{-\lambda y}\) → E = 1/λ; \(\tfrac1\mu e^{-y/\mu}\) → E = μ.</span><span data-l="en">look at what stands in front of e: \(\lambda e^{-\lambda y}\) → E = 1/λ; \(\tfrac1\mu e^{-y/\mu}\) → E = μ.</span><span data-l="kk">e-нің алдында не тұрғанына қара: \(\lambda e^{-\lambda y}\) → E = 1/λ; \(\tfrac1\mu e^{-y/\mu}\) → E = μ.</span></div></li>
+    <li><div><span data-l="ru"><b>Ошибка в хвосте геометрического ряда.</b> \(\sum_{k\ge10}2^{-k}\) — это \(2^{-9}\), а не \(2^{-10}\).</span><span data-l="en"><b>Error in the tail of a geometric series.</b> \(\sum_{k\ge10}2^{-k}\) is \(2^{-9}\), not \(2^{-10}\).</span><span data-l="kk"><b>Геометриялық қатардың «құйрығындағы» қате.</b> \(\sum_{k\ge10}2^{-k}=2^{-9}\), \(2^{-10}\) емес.</span> <a href="#t19">.19</a></div></li>
+    <li><div><span data-l="ru"><b>Не найдена нормирующая константа.</b> Если вероятность дана как k·i или c·f(y), сначала найди k из «сумма = 1».</span><span data-l="en"><b>Normalizing constant not found.</b> If a probability is given as k·i or c·f(y), first find k from “sum = 1”.</span><span data-l="kk"><b>Нормалаушы тұрақты табылмаған.</b> Ықтималдық k·i немесе c·f(y) түрінде берілсе, алдымен k-ны «қосынды = 1» шартынан тап.</span> <a href="#t36">.36</a></div></li>
+    <li><div><span data-l="ru"><b>Ответ вне диапазона.</b> E всегда между наименьшим и наибольшим значением X. Если нет — ищи ошибку.</span><span data-l="en"><b>Answer outside the range.</b> E always lies between the smallest and largest values of X. If not, look for an error.</span><span data-l="kk"><b>Жауап ауқымнан тыс.</b> E әрқашан X-тің ең кіші және ең үлкен мәндерінің арасында. Олай болмаса, қатені ізде.</span></div></li>
+  </ol>
+</section>
+
+<section id="models">
+  <span class="eyebrow"><span data-l="ru">Живые модели</span><span data-l="en">Live models</span><span data-l="kk">Интерактивті модельдер</span></span>
+  <h2><span data-l="ru">Покрути и посмотри</span><span data-l="en">Play and see</span><span data-l="kk">Өзгертіп, көр</span></h2>
+
+  <div class="panel">
+    <h3><span data-l="ru">Весы: где точка опоры</span><span data-l="en">Balance: where is the fulcrum</span><span data-l="kk">Таразы: тірек нүктесі қайда</span></h3>
+    <div class="chips" id="presets">
+      <button class="chip" data-p="roul" aria-pressed="true"><span data-l="ru">Рулетка</span><span data-l="en">Roulette</span><span data-l="kk">Рулетка</span></button>
+      <button class="chip" data-p="bin"><span data-l="ru">Бином n=3, p=5/9</span><span data-l="en">Binomial n=3, p=5/9</span><span data-l="kk">Биномдық n=3, p=5/9</span></button>
+      <button class="chip" data-p="hyp"><span data-l="ru">Урна 5к+4б</span><span data-l="en">Urn 5R+4W</span><span data-l="kk">Урна 5қ+4а</span></button>
+      <button class="chip" data-p="out"><span data-l="ru">Своё + выброс</span><span data-l="en">Custom + outlier</span><span data-l="kk">Өзіндік + шеткі мән</span></button>
+    </div>
+    <svg class="v" id="see" viewBox="0 0 360 190" role="img" aria-label="E(X)"></svg>
+    <div class="readout"><span class="k-mean">▲ E(X) = <b id="seeE"></b></span><span class="k-med">┆ <span data-l="ru">медиана</span><span data-l="en">median</span><span data-l="kk">медиана</span> = <b id="seeM"></b></span></div>
+    <div id="outCtl" hidden>
+      <div class="two">
+        <label class="sl"><span data-l="ru">вес в 0</span><span data-l="en">weight at 0</span><span data-l="kk">0-дегі салмақ</span> <output id="o0"></output><input id="w0" type="range" min="0" max="100" value="30"></label>
+        <label class="sl"><span data-l="ru">вес в 1</span><span data-l="en">weight at 1</span><span data-l="kk">1-дегі салмақ</span> <output id="o1"></output><input id="w1" type="range" min="0" max="100" value="40"></label>
+        <label class="sl"><span data-l="ru">вес в 2</span><span data-l="en">weight at 2</span><span data-l="kk">2-дегі салмақ</span> <output id="o2"></output><input id="w2" type="range" min="0" max="100" value="25"></label>
+        <label class="sl"><span data-l="ru">вес выброса</span><span data-l="en">outlier weight</span><span data-l="kk">шеткі мән салмағы</span> <output id="o3"></output><input id="w3" type="range" min="0" max="100" value="5"></label>
+      </div>
+      <label class="sl"><span data-l="ru">где стоит выброс</span><span data-l="en">outlier position</span><span data-l="kk">шеткі мәннің орны</span> <output id="ov"></output><input id="vOut" type="range" min="3" max="40" value="10"></label>
+      <p class="note"><span data-l="ru">Двигай выброс вправо: ▲ уходит за ним, медиана стоит.</span><span data-l="en">Move the outlier to the right: ▲ follows it, the median stays.</span><span data-l="kk">Шеткі мәнді оңға жылжыт: ▲ оның артынан кетеді, медиана орнында тұрады.</span></p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3><span data-l="ru">Бином: Σk·p(k) всегда равно np</span><span data-l="en">Binomial: Σk·p(k) always equals np</span><span data-l="kk">Биномдық: Σk·p(k) әрқашан np-ға тең</span></h3>
+    <div class="two">
+      <label class="sl">n <output id="bnO"></output><input id="bn" type="range" min="1" max="30" value="10"></label>
+      <label class="sl">p <output id="bpO"></output><input id="bp" type="range" min="0" max="100" value="20"></label>
+    </div>
+    <svg class="v" id="bsvg" viewBox="0 0 360 160" role="img" aria-label="Bin(n,p)"></svg>
+    <div class="readout"><span>Σ k·p(k) = <b id="bS"></b></span><span>n·p = <b id="bF"></b></span></div>
+  </div>
+
+  <div class="panel">
+    <h3><span data-l="ru">Объединение проб крови (пример 3.5.4)</span><span data-l="en">Blood-sample pooling (Example 3.5.4)</span><span data-l="kk">Қан үлгілерін біріктіру (3.5.4-мысал)</span></h3>
+    <label class="sl"><span data-l="ru">доля заражённых p</span><span data-l="en">infection rate p</span><span data-l="kk">жұқтырғандар үлесі p</span> <output id="plO"></output><input id="pl" type="range" min="-400" max="-30" value="-300"></label>
+    <svg class="v" id="psvg" viewBox="0 0 360 70" role="img" aria-label="E(X)"></svg>
+    <p id="plTxt" style="font-size:.92rem"></p>
+  </div>
+
+  <div class="panel">
+    <h3><span data-l="ru">Санкт-Петербург с ограничением (задача <a href="#t19">3.5.19</a>)</span><span data-l="en">St. Petersburg with a cap (Problem <a href="#t19">3.5.19</a>)</span><span data-l="kk">Шектелген Санкт-Петербург (<a href="#t19">3.5.19</a>-есеп)</span></h3>
+    <label class="sl"><span data-l="ru">максимальная выплата</span><span data-l="en">maximum payout</span><span data-l="kk">ең үлкен төлем</span> <output id="cO"></output><input id="cap" type="range" min="1" max="12" step="0.1" value="3"></label>
+    <div class="readout"><span><span data-l="ru">справедливая ставка</span><span data-l="en">fair ante</span><span data-l="kk">әділ бәс</span> = <b id="cE"></b></span></div>
+  </div>
+
+  <div class="panel">
+    <h3><span data-l="ru">Лампочка: среднее против медианы (пример 3.5.8)</span><span data-l="en">Light bulb: mean vs median (Example 3.5.8)</span><span data-l="kk">Шам: орташа мен медиана (3.5.8-мысал)</span></h3>
+    <label class="sl"><span data-l="ru">средний срок μ, ч</span><span data-l="en">mean life μ, h</span><span data-l="kk">орташа мерзім μ, сағ</span> <output id="muO"></output><input id="mu" type="range" min="100" max="2000" step="50" value="1000"></label>
+    <svg class="v" id="esvg" viewBox="0 0 360 170" role="img" aria-label="f(y)"></svg>
+    <div class="readout"><span class="k-mean">E(Y) = <b id="eE"></b></span><span class="k-med"><span data-l="ru">медиана</span><span data-l="en">median</span><span data-l="kk">медиана</span> = <b id="eM"></b></span></div>
+  </div>
+  <a class="back" href="#top"><span data-l="ru">↑ наверх</span><span data-l="en">↑ to top</span><span data-l="kk">↑ жоғарыға</span></a>
+</section>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const I18N={
+  ru:{title:'Матожидание и медиана',dec:',',h:'ч',pool:'объединение',one:'по одному',good:e=>`Объединение выгодно: в среднем <b>${e}</b> теста вместо 50.`,bad:e=>`Объединение невыгодно: в среднем <b>${e}</b>, это больше 50.`,loc:'ru-RU'},
+  en:{title:'Expected Value and Median',dec:'.',h:'h',pool:'pooled',one:'one by one',good:e=>`Pooling pays off: on average <b>${e}</b> tests instead of 50.`,bad:e=>`Pooling does not pay off: on average <b>${e}</b>, more than 50.`,loc:'en-US'},
+  kk:{title:'Математикалық үміт және медиана',dec:',',h:'сағ',pool:'біріктіру',one:'жеке-жеке',good:e=>`Біріктіру тиімді: 50 тесттің орнына орта есеппен <b>${e}</b> тест.`,bad:e=>`Біріктіру тиімсіз: орта есеппен <b>${e}</b>, бұл 50-ден көп.`,loc:'kk-KZ'}
+};
+let L='ru';
+const fmt=(x,d=3)=>(Math.abs(x)<1e-12?0:x).toFixed(d).replace('.',I18N[L].dec);
+function C(n,k){let r=1;for(let i=1;i<=k;i++)r=r*(n-k+i)/i;return r}
+const presets={roul:{v:[-1,1],p:[10/19,9/19]},bin:{v:[0,1,2,3],p:[64,240,300,125].map(x=>x/729)},hyp:{v:[0,1,2,3],p:[4,30,40,10].map(x=>x/84)}};
+let cur='roul';
+function median(v,p){let c=0;for(let i=0;i<v.length;i++){c+=p[i];if(Math.abs(c-0.5)<1e-9&&i<v.length-1)return(v[i]+v[i+1])/2;if(c>0.5)return v[i];}return v[v.length-1];}
+function getDist(){if(cur!=='out')return presets[cur];const w=[0,1,2,3].map(i=>+$('w'+i).value),s=w.reduce((a,b)=>a+b,0)||1;return{v:[0,1,2,+$('vOut').value],p:w.map(x=>x/s)};}
+function drawSee(){
+  const {v,p}=getDist();const E=v.reduce((a,x,i)=>a+x*p[i],0),M=median(v,p);
+  let lo=Math.min(...v,E),hi=Math.max(...v,E);const pad=(hi-lo)*0.12||1;lo-=pad;hi+=pad;
+  const X=x=>20+(x-lo)/(hi-lo)*320,base=135,maxp=Math.max(...p)||1;
+  let s=`<line x1="12" y1="${base}" x2="348" y2="${base}" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>`;
+  v.forEach((x,i)=>{const h=p[i]/maxp*100;
+    s+=`<rect x="${X(x)-11}" y="${base-h}" width="22" height="${h}" rx="3" fill="var(--accent)" opacity=".85"/>`;
+    s+=`<text x="${X(x)}" y="${base-h-6}" font-size="10" text-anchor="middle" fill="var(--muted)" font-family="JetBrains Mono,monospace">${fmt(p[i],3)}</text>`;
+    s+=`<text x="${X(x)}" y="${base+40}" font-size="11" text-anchor="middle" fill="var(--ink)" font-family="JetBrains Mono,monospace">${x}</text>`;});
+  s+=`<line x1="${X(M)}" y1="18" x2="${X(M)}" y2="${base}" stroke="var(--mark)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  s+=`<polygon points="${X(E)},${base+2} ${X(E)-12},${base+24} ${X(E)+12},${base+24}" fill="var(--accent)" stroke="var(--ink)" stroke-width="1"/>`;
+  $('see').innerHTML=s;$('seeE').textContent=fmt(E);$('seeM').textContent=fmt(M,2);
+  if(cur==='out'){[0,1,2,3].forEach(i=>$('o'+i).textContent=fmt(p[i],2));$('ov').textContent=v[3];}
+}
+document.querySelectorAll('#presets .chip').forEach(b=>b.onclick=()=>{cur=b.dataset.p;document.querySelectorAll('#presets .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));$('outCtl').hidden=cur!=='out';drawSee();});
+['w0','w1','w2','w3','vOut'].forEach(id=>$(id).oninput=drawSee);
+function drawBin(){
+  const n=+$('bn').value,p=+$('bp').value/100;$('bnO').textContent=n;$('bpO').textContent=fmt(p,2);
+  const pk=[];for(let k=0;k<=n;k++)pk.push(C(n,k)*p**k*(1-p)**(n-k));
+  const S=pk.reduce((a,x,k)=>a+k*x,0),mx=Math.max(...pk)||1,bw=320/(n+1);
+  let s='';pk.forEach((x,k)=>{const h=x/mx*110;
+    s+=`<rect x="${20+k*bw+1}" y="${130-h}" width="${Math.max(bw-2,1)}" height="${h}" fill="var(--accent)" opacity=".8"/>`;
+    if(n<=15||k%5==0)s+=`<text x="${20+k*bw+bw/2}" y="146" font-size="9" text-anchor="middle" fill="var(--muted)" font-family="JetBrains Mono,monospace">${k}</text>`;});
+  const xe=20+(n*p+0.5)*bw;
+  s+=`<line x1="20" y1="130" x2="340" y2="130" stroke="var(--ink)"/><polygon points="${xe},131 ${xe-7},144 ${xe+7},144" fill="var(--mark)"/>`;
+  $('bsvg').innerHTML=s;$('bS').textContent=fmt(S);$('bF').textContent=fmt(n*p);
+}
+['bn','bp'].forEach(id=>$(id).oninput=drawBin);
+function drawPool(){
+  const t=I18N[L],p=10**(+$('pl').value/100),q=(1-p)**50,E=q+51*(1-q);
+  $('plO').textContent=p<0.001?p.toExponential(1).replace('.',t.dec):fmt(p,4);
+  const W=v=>v/51*320;
+  $('psvg').innerHTML=`<text x="20" y="14" font-size="10" fill="var(--muted)">${t.pool}</text><rect x="20" y="18" width="${W(E)}" height="14" rx="3" fill="${E<50?'var(--good)':'var(--bad)'}"/><text x="${Math.min(24+W(E),320)}" y="29" font-size="10" fill="var(--ink)" font-family="JetBrains Mono,monospace">${fmt(E,1)}</text><text x="20" y="48" font-size="10" fill="var(--muted)">${t.one}</text><rect x="20" y="52" width="${W(50)}" height="14" rx="3" fill="var(--muted)" opacity=".5"/>`;
+  $('plTxt').innerHTML=E<50?t.good(fmt(E,1)):t.bad(fmt(E,1));
+}
+$('pl').oninput=drawPool;
+function drawStp(){const Cc=10**+$('cap').value;let E=0;for(let k=1;k<200;k++)E+=Math.min(2**k,Cc)/2**k;$('cO').textContent='$'+Math.round(Cc).toLocaleString(I18N[L].loc);$('cE').textContent='$'+fmt(E,2);}
+$('cap').oninput=drawStp;
+function drawExp(){
+  const mu=+$('mu').value,m=mu*Math.LN2,Ymax=4000,X=y=>20+y/Ymax*320,H=f=>140-f*mu*110,h=I18N[L].h;
+  $('muO').textContent=mu;$('eE').textContent=Math.round(mu)+' '+h;$('eM').textContent=Math.round(m)+' '+h;
+  let path='M20,140',area='M20,140';
+  for(let y=0;y<=Ymax;y+=20){const f=Math.exp(-y/mu)/mu;path+=` L${X(y)},${H(f)}`;if(y<=m)area+=` L${X(y)},${H(f)}`;}
+  area+=` L${X(m)},${H(Math.exp(-m/mu)/mu)} L${X(m)},140 Z`;
+  let s=`<path d="${area}" fill="var(--mark-soft)"/><path d="${path}" fill="none" stroke="var(--ink)" stroke-width="2"/><line x1="20" y1="140" x2="340" y2="140" stroke="var(--line)"/><line x1="${X(m)}" y1="20" x2="${X(m)}" y2="140" stroke="var(--mark)" stroke-dasharray="4 4"/><line x1="${X(mu)}" y1="20" x2="${X(mu)}" y2="140" stroke="var(--accent)" stroke-width="2"/><text x="${X(m)-4}" y="16" font-size="10" text-anchor="end" fill="var(--mark)">m</text><text x="${X(mu)+4}" y="16" font-size="10" fill="var(--accent)">μ</text><text x="${X(m)/2+10}" y="132" font-size="10" text-anchor="middle" fill="var(--mark)">50%</text>`;
+  [0,1000,2000,3000,4000].forEach(t=>s+=`<text x="${X(t)}" y="156" font-size="9" text-anchor="middle" fill="var(--muted)" font-family="JetBrains Mono,monospace">${t}</text>`);
+  $('esvg').innerHTML=s;
+}
+$('mu').oninput=drawExp;
+const numCells=[...document.querySelectorAll('table.num td')];
+numCells.forEach(td=>td.dataset.raw=td.textContent);
+function setLang(l){
+  if(!I18N[l])l='ru';L=l;
+  document.documentElement.setAttribute('data-lang',l);
+  document.documentElement.lang=l;
+  document.title=I18N[l].title;
+  document.querySelectorAll('.langsw button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.set===l));
+  numCells.forEach(td=>{td.textContent=l==='en'?td.dataset.raw:td.dataset.raw.replace(/(\d)\.(\d)/g,'$1,$2');});
+  try{localStorage.setItem('ev-lang',l)}catch(e){}
+  drawSee();drawBin();drawPool();drawStp();drawExp();
+}
+document.querySelectorAll('.langsw button').forEach(b=>b.onclick=()=>setLang(b.dataset.set));
+let saved='ru';try{saved=localStorage.getItem('ev-lang')||'ru'}catch(e){}
+setLang(saved);
+</script>
+
+</body>
+</html>
